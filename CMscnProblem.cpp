@@ -35,6 +35,8 @@ CMscnProblem::~CMscnProblem()
 	delete this->b_if_good_init;
 	delete this->b_if_good_pd_solution;
 
+	//delete another parametrs
+	
 }
 
 void CMscnProblem::vDeleteOneDimensionalArray(double* pd_table)
@@ -94,6 +96,7 @@ void CMscnProblem::vSetSizes(int i_d_length, int i_f_length, int i_m_length, int
 			this->b_if_was_set_value = new bool;
 			this->b_if_good_init = new bool;
 			this->b_if_good_pd_solution = new bool;
+		
 		}
 	
 

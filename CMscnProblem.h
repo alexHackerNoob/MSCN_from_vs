@@ -16,6 +16,22 @@ private:
 	double *sf_table = NULL;
 	double *sm_table = NULL;
 	double *ss_table = NULL;
+	//tablicy jendorazowego kosztu
+	double *ud_table;
+	double *uf_table;
+	double *um_table;
+	//zyski
+	double *p_table;
+
+	//zakresy wartosci
+	std::pair<double, double>** xd_min_max;
+	std::pair<double, double>** xf_min_max;
+	std::pair<double, double>** xm_min_max;
+
+	//parametrs of solution
+	double **xd_table;
+	double **xf_table;
+	double **xm_table;
 	//size of elements
 	int i_d_size;
 	int i_f_size;
