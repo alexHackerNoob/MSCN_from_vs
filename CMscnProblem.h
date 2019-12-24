@@ -4,9 +4,10 @@ using namespace std;
 class CMscnProblem
 {
 private:
-	bool *b_if_good_init = new bool;
-	bool *b_if_good_set_value = new bool;
-	bool *b_if_good_pd_solution = new bool;
+	bool *b_if_good_init;
+	bool *b_if_good_set_value;
+	bool *b_if_good_pd_solution;
+	bool *b_if_was_set_value;
 	//cena dostawki + przerabienia
 	double **cd_table = NULL;
 	double **cf_table = NULL;

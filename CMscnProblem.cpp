@@ -4,9 +4,14 @@
 
 CMscnProblem::CMscnProblem()
 {
+	this->b_if_good_init = new bool;
+	this->b_if_good_set_value = new bool;
+	this->b_if_good_pd_solution = new bool;
+	this->b_if_was_set_value = new bool;
 	*(this->b_if_good_init) = true;
 	*(this->b_if_good_set_value) = true;
 	*(this->b_if_good_pd_solution) = true;
+	*(this->b_if_was_set_value) = false;
 	this->i_d_size = 0;
 	this->i_f_size = 0;
 	this->i_m_size = 0;
@@ -25,7 +30,8 @@ CMscnProblem::~CMscnProblem()
 	this->vDeleteTwoDementionalArray(this->cd_table, this->i_d_size);
 	this->vDeleteTwoDementionalArray(this->cf_table, this->i_f_size);
 	this->vDeleteTwoDementionalArray(this->cm_table,this->i_m_size);
-	//delete bool pointers
+	//delete bool pointers.
+	delete this->b_if_was_set_value;
 	delete this->b_if_good_init;
 	delete this->b_if_good_pd_solution;
 	delete this->b_if_good_set_value;
@@ -68,10 +74,40 @@ void CMscnProblem::vSetSizes(int i_d_length, int i_f_length, int i_m_length, int
 {
 	if (i_d_length <= 0 || i_f_length <= 0 || i_m_length <= 0 || i_s_length <= 0)
 	{
-		(*this->b_if_good_pd_solution) = false;
+		*(this->b_if_good_init) = false;
 	}
 	else
 	{
+		if (this->b_if_was_set_value)
+		{
+			//delete one-dimentional double arrays
+			this->vDeleteOneDimensionalArray(this->sd_table);
+			this->vDeleteOneDimensionalArray(this->sf_table);
+			this->vDeleteOneDimensionalArray(this->sm_table);
+			this->vDeleteOneDimensionalArray(this->ss_table);
+			//delete two-dimensional double arrays
+			this->vDeleteTwoDementionalArray(this->cd_table, this->i_d_size);
+			this->vDeleteTwoDementionalArray(this->cf_table, this->i_f_size);
+			this->vDeleteTwoDementionalArray(this->cm_table, this->i_m_size);
+			//delete bool pointers
+			delete this->b_if_was_set_value;
+			delete this->b_if_good_init;
+			delete this->b_if_good_pd_solution;
+			delete this->b_if_good_set_value;
+			//init bool pointers
+			this->b_if_was_set_value = new bool;
+			this->b_if_good_init = new bool;
+			this->b_if_good_pd_solution = new bool;
+			this->b_if_good_set_value = new bool;
+		}
+	
+
+		//new part 
+		*(this->b_if_was_set_value) = true;
+		*(this->b_if_good_init) = true;
+		*(this->b_if_good_pd_solution) = true;
+		*(this->b_if_good_set_value) = true;
+		
 		this->cd_table = new double*[i_d_length];
 		this->cf_table = new double*[i_f_length];
 		this->cm_table = new double*[i_m_length];
@@ -87,10 +123,15 @@ void CMscnProblem::vSetSizes(int i_d_length, int i_f_length, int i_m_length, int
 		{
 			this->cm_table[i] = new double[i_s_length];
 		}
+		this->sd_table = new double[i_d_length];
+		this->sf_table = new double[i_f_length];
+		this->sm_table = new double[i_m_length];
+		this->ss_table = new double[i_s_length];
 		this->i_d_size = i_d_length;
 		this->i_f_size = i_f_length;
 		this->i_m_size = i_m_length;
 		this->i_s_size = i_s_length;
 	}
+	*(this->b_if_was_set_value) = true;
 }
 
