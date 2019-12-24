@@ -97,7 +97,7 @@ void CMscnProblem::vSetSizes(int i_d_length, int i_f_length, int i_m_length, int
 		}
 	
 
-		//new part 
+		//new part
 		*(this->b_if_was_set_value) = true;
 		*(this->b_if_good_init) = true;
 		*(this->b_if_good_pd_solution) = true;
@@ -168,6 +168,54 @@ bool CMscnProblem::setValueCM(double d_value, int i_x_index, int i_y_index)
 	}
 }
 
+bool CMscnProblem::setValueSD(double d_value, int i_index)
+{
+	if (!*(this->b_if_good_init) || i_index < 0 || i_index >= this->i_d_size)
+	{
+		return false;
+	}
+	else 
+	{
+		this->sd_table[i_index] = d_value;
+		return true;
+	}
+}
 
+bool CMscnProblem::setValueSF(double d_value, int i_index)
+{
+	if (!*(this->b_if_good_init) || i_index < 0 || i_index >= this->i_f_size)
+	{
+		return false;
+	}
+	else
+	{
+		this->sf_table[i_index] = d_value;
+		return true;
+	}
+}
 
+bool CMscnProblem::setValueSM(double d_value, int i_index)
+{
+	if (!*(this->b_if_good_init) || i_index < 0 || i_index >= this->i_f_size)
+	{
+		return false;
+	}
+	else
+	{
+		this->sf_table[i_index] = d_value;
+		return true;
+	}
+}
 
+bool CMscnProblem::setValueSS(double d_value, int i_index)
+{
+	if (!*(this->b_if_good_init) || i_index < 0 || i_index >= this->i_s_size)
+	{
+		return false;
+	}
+	else
+	{
+		this->ss_table[i_index] = d_value;
+		return true;
+	}
+}
