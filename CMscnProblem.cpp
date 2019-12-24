@@ -36,7 +36,19 @@ CMscnProblem::~CMscnProblem()
 	delete this->b_if_good_pd_solution;
 
 	//delete another parametrs
-	
+	this->vDeleteOneDimensionalArray(this->ud_table);
+	this->vDeleteOneDimensionalArray(this->uf_table);
+	this->vDeleteOneDimensionalArray(this->um_table);
+	this->vDeleteOneDimensionalArray(this->p_table);
+
+	this->vDeleteTwoDementionalArray(this->xd_min_max, this->i_d_size);
+	this->vDeleteTwoDementionalArray(this->xf_min_max, this->i_f_size);
+	this->vDeleteTwoDementionalArray(this->xm_min_max, this->i_m_size);
+
+	this->vDeleteTwoDementionalArray(this->xd_table, this->i_d_size);
+	this->vDeleteTwoDementionalArray(this->xf_table, this->i_f_size);
+	this->vDeleteTwoDementionalArray(this->xm_table, this->i_m_size);
+
 }
 
 void CMscnProblem::vDeleteOneDimensionalArray(double* pd_table)
@@ -54,6 +66,18 @@ void CMscnProblem::vDeleteTwoDementionalArray(double** pd_table, int i_size)
 			if (pd_table[i] != NULL) delete pd_table[i];
 		}
 		delete pd_table;
+	}
+}
+
+void CMscnProblem::vDeleteTwoDementionalArray(std::pair<double, double>** pp_pointer, int i_size)
+{
+	if (pp_pointer != NULL)
+	{
+		for (int i = 0; i < i_size; i++)
+		{
+			if (pp_pointer[i] == NULL) delete pp_pointer[i];
+		}
+		delete pp_pointer;
 	}
 }
 

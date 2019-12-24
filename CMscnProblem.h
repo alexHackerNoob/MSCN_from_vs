@@ -41,6 +41,7 @@ private:
 	//delete methods
 	void vDeleteOneDimensionalArray(double* pd_table);
 	void vDeleteTwoDementionalArray(double** pd_table, int i_size);
+	void vDeleteTwoDementionalArray(std::pair<double, double>** pp_pointer ,int i_size);
 public:
 	CMscnProblem();
 	~CMscnProblem();
