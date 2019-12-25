@@ -24,6 +24,7 @@ private:
 	double *p_table;
 
 	//zakresy wartosci
+
 	std::pair<double, double>** xd_min_max;
 	std::pair<double, double>** xf_min_max;
 	std::pair<double, double>** xm_min_max;

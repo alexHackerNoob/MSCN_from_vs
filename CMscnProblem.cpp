@@ -49,6 +49,9 @@ CMscnProblem::~CMscnProblem()
 	this->vDeleteTwoDementionalArray(this->xf_table, this->i_f_size);
 	this->vDeleteTwoDementionalArray(this->xm_table, this->i_m_size);
 
+	this->vDeleteTwoDementionalArray(this->xd_min_max, this->i_d_size);
+	this->vDeleteTwoDementionalArray(this->xf_min_max, this->i_f_size);
+	this->vDeleteTwoDementionalArray(this->xm_min_max, this->i_m_size);
 }
 
 void CMscnProblem::vDeleteOneDimensionalArray(double* pd_table)
