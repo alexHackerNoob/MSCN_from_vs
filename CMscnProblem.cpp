@@ -41,10 +41,6 @@ CMscnProblem::~CMscnProblem()
 	this->vDeleteOneDimensionalArray(this->um_table);
 	this->vDeleteOneDimensionalArray(this->p_table);
 
-	this->vDeleteTwoDementionalArray(this->xd_min_max, this->i_d_size);
-	this->vDeleteTwoDementionalArray(this->xf_min_max, this->i_f_size);
-	this->vDeleteTwoDementionalArray(this->xm_min_max, this->i_m_size);
-
 	this->vDeleteTwoDementionalArray(this->xd_table, this->i_d_size);
 	this->vDeleteTwoDementionalArray(this->xf_table, this->i_f_size);
 	this->vDeleteTwoDementionalArray(this->xm_table, this->i_m_size);
@@ -78,7 +74,7 @@ void CMscnProblem::vDeleteTwoDementionalArray(std::pair<double, double>** pp_poi
 	{
 		for (int i = 0; i < i_size; i++)
 		{
-			if (pp_pointer[i] == NULL) delete pp_pointer[i];
+			if (pp_pointer[i] != NULL) delete pp_pointer[i];
 		}
 		delete pp_pointer;
 	}
@@ -425,7 +421,7 @@ bool CMscnProblem::bGetDatasFromProblem(double * pd_problem, int i_size)
 	this->xm_min_max = new std::pair<double, double>*[this->i_m_size];
 	for (int i = 0; i < this->i_m_size; i++)
 	{
-		this->xf_min_max[i] = new std::pair<double, double>[this->i_s_size];
+		this->xm_min_max[i] = new std::pair<double, double>[this->i_s_size];
 	}
 
 	i_tab_length = this->i_m_size * this->i_s_size * 2;

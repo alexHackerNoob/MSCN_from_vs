@@ -2,6 +2,7 @@
 int main()
 {
 	{
+		/*
 		CMscnProblem cm = CMscnProblem();
 		cout << cm.bGetIfGoodInit();
 		cout << cm.bGetIfGoodPdSolution();
@@ -40,6 +41,33 @@ int main()
 			delete xd_min_max[i];
 		}
 		delete xd_min_max;
+		*/
+		double *pd_problem = new double[21];
+		pd_problem[0] = 1;
+		pd_problem[1] = 1;
+		pd_problem[2] = 1;
+		pd_problem[3] = 1;
+		pd_problem[4] = 100;
+		pd_problem[5] = 50;
+		pd_problem[6] = 10.5;
+		pd_problem[7] = 100;
+		pd_problem[8] = 3;
+		pd_problem[9] = 4;
+		pd_problem[10] = 1;
+		pd_problem[11] = 10;
+		pd_problem[12] = 10;
+		pd_problem[13] = 100;
+		pd_problem[14] = 300.5;
+		pd_problem[15] = 1;
+		pd_problem[16] = 100;
+		pd_problem[17] = 1;
+		pd_problem[18] = 100;
+		pd_problem[19] = 1;
+		pd_problem[20] = 100;
+		CMscnProblem cm = CMscnProblem();
+		cm.bGetDatasFromProblem(pd_problem, 20);
+		delete pd_problem;
+
 	}
 	system("pause");
 	return 0;
