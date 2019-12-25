@@ -156,7 +156,7 @@ void CMscnProblem::vSetSizes(int i_d_length, int i_f_length, int i_m_length, int
 	}
 }
 
-bool CMscnProblem::setValueCD(double d_value, int i_x_index, int i_y_index)
+bool CMscnProblem::bsetValueCD(double d_value, int i_x_index, int i_y_index)
 {
 	if (!*(this->b_if_good_init) || i_x_index < 0 || i_x_index >= this->i_d_size || i_y_index < 0 || i_y_index >= this->i_f_size)
 	{
@@ -169,7 +169,7 @@ bool CMscnProblem::setValueCD(double d_value, int i_x_index, int i_y_index)
 	}
 }
 
-bool CMscnProblem::setValueCF(double d_value, int i_x_index, int i_y_index)
+bool CMscnProblem::bsetValueCF(double d_value, int i_x_index, int i_y_index)
 {
 	if (!*(this->b_if_good_init) || i_x_index < 0 || i_x_index >= this->i_f_size || i_y_index < 0 || i_y_index >= this->i_m_size)
 	{
@@ -182,7 +182,7 @@ bool CMscnProblem::setValueCF(double d_value, int i_x_index, int i_y_index)
 	}
 }
 
-bool CMscnProblem::setValueCM(double d_value, int i_x_index, int i_y_index)
+bool CMscnProblem::bsetValueCM(double d_value, int i_x_index, int i_y_index)
 {
 	if (!*(this->b_if_good_init) || i_x_index < 0 || i_x_index >= this->i_m_size || i_y_index < 0 || i_y_index >= this->i_s_size)
 	{
@@ -195,7 +195,7 @@ bool CMscnProblem::setValueCM(double d_value, int i_x_index, int i_y_index)
 	}
 }
 
-bool CMscnProblem::setValueSD(double d_value, int i_index)
+bool CMscnProblem::bsetValueSD(double d_value, int i_index)
 {
 	if (!*(this->b_if_good_init) || i_index < 0 || i_index >= this->i_d_size)
 	{
@@ -208,7 +208,7 @@ bool CMscnProblem::setValueSD(double d_value, int i_index)
 	}
 }
 
-bool CMscnProblem::setValueSF(double d_value, int i_index)
+bool CMscnProblem::bsetValueSF(double d_value, int i_index)
 {
 	if (!*(this->b_if_good_init) || i_index < 0 || i_index >= this->i_f_size)
 	{
@@ -221,7 +221,7 @@ bool CMscnProblem::setValueSF(double d_value, int i_index)
 	}
 }
 
-bool CMscnProblem::setValueSM(double d_value, int i_index)
+bool CMscnProblem::bsetValueSM(double d_value, int i_index)
 {
 	if (!*(this->b_if_good_init) || i_index < 0 || i_index >= this->i_f_size)
 	{
@@ -234,7 +234,7 @@ bool CMscnProblem::setValueSM(double d_value, int i_index)
 	}
 }
 
-bool CMscnProblem::setValueSS(double d_value, int i_index)
+bool CMscnProblem::bsetValueSS(double d_value, int i_index)
 {
 	if (!*(this->b_if_good_init) || i_index < 0 || i_index >= this->i_s_size)
 	{
@@ -245,4 +245,201 @@ bool CMscnProblem::setValueSS(double d_value, int i_index)
 		this->ss_table[i_index] = d_value;
 		return true;
 	}
+}
+
+bool CMscnProblem::bGetDatasFromProblem(double * pd_problem, int i_size)
+{
+	if (pd_problem == NULL || i_size <= 0) return false;
+	for (int i = 0; i < i_size; i++)
+	{
+		if (pd_problem[i] <= 0) return false;
+	}
+	int i_current_index_pd_problem = 0;
+	//add sizes
+	this->i_d_size = pd_problem[i_current_index_pd_problem++];
+	this->i_f_size = pd_problem[i_current_index_pd_problem++];
+	this->i_m_size = pd_problem[i_current_index_pd_problem++];
+	this->i_s_size = pd_problem[i_current_index_pd_problem++];
+
+	this->vSetSizes(this->i_d_size, this->i_f_size, this->i_m_size, this->i_s_size);
+	//add s
+	int i_current_table_index_help = 0;
+
+	for (int i = i_current_index_pd_problem; i < i_current_index_pd_problem + this->i_d_size; i++, i_current_table_index_help++)
+	{
+		this->sd_table[i_current_table_index_help] = pd_problem[i];
+	}
+	i_current_index_pd_problem += this->i_d_size;
+	i_current_table_index_help = 0;
+
+	for (int i = i_current_index_pd_problem; i < i_current_index_pd_problem + this->i_f_size; i++, i_current_table_index_help++)
+	{
+		this->sf_table[i_current_table_index_help] = pd_problem[i];
+	}
+	i_current_index_pd_problem += this->i_f_size;
+	i_current_table_index_help = 0;
+
+	for (int i = i_current_index_pd_problem; i < i_current_index_pd_problem + this->i_m_size; i++, i_current_table_index_help++)
+	{
+		this->sm_table[i_current_table_index_help] = pd_problem[i];
+	}
+	i_current_index_pd_problem += this->i_m_size;
+	i_current_table_index_help = 0;
+
+	for (int i = i_current_index_pd_problem; i < i_current_index_pd_problem + this->i_s_size; i++, i_current_table_index_help++)
+	{
+		this->ss_table[i_current_table_index_help] = pd_problem[i];
+	}
+	i_current_index_pd_problem += this->i_s_size;
+	i_current_table_index_help = 0;
+
+	int i_line_index = 0;
+	int i_column_index = 0;
+
+	
+	//odzyt cd cf cm
+	int i_tab_length = this->i_d_size * this->i_f_size;
+	for (int i = i_current_index_pd_problem; i < i_current_index_pd_problem + i_tab_length; i++)
+	{
+		if (i_column_index == this->i_f_size)
+		{
+			i_column_index = 0;
+			i_line_index++;
+		}
+		this->cd_table[i_line_index][i_column_index] = pd_problem[i];
+	}
+	i_current_index_pd_problem += i_tab_length;
+
+	i_line_index = 0;
+	i_column_index = 0;
+	i_tab_length = this->i_f_size * this->i_m_size;
+	for (int i = i_current_index_pd_problem; i < i_current_index_pd_problem + i_tab_length; i++)
+	{
+		if (i_column_index == this->i_m_size)
+		{
+			i_column_index = 0;
+			i_line_index++;
+		}
+		this->cf_table[i_line_index][i_column_index] = pd_problem[i];
+	}
+	i_current_index_pd_problem += i_tab_length;
+
+	i_line_index = 0;
+	i_column_index = 0;
+	i_tab_length = this->i_m_size * this->i_s_size;
+	for (int i = i_current_index_pd_problem; i < i_current_index_pd_problem + i_tab_length; i++)
+	{
+		if (i_column_index == this->i_s_size)
+		{
+			i_column_index = 0;
+			i_line_index++;
+		}
+		this->cm_table[i_line_index][i_column_index] = pd_problem[i];
+	}
+	i_current_index_pd_problem += i_tab_length;
+
+	//wczyt ud wartosi
+	i_current_table_index_help = 0;
+	this->ud_table = new double[this->i_d_size];
+	for (int i = i_current_index_pd_problem; i < i_current_index_pd_problem + this->i_d_size; i++, i_current_table_index_help++)
+	{
+		this->ud_table[i_current_table_index_help] = pd_problem[i];
+	}
+	i_current_index_pd_problem += this->i_d_size;
+	//wczyt uf wartosi
+	i_current_table_index_help = 0;
+	this->uf_table = new double[this->i_f_size];
+	for (int i = i_current_index_pd_problem; i < i_current_index_pd_problem + this->i_f_size; i++, i_current_table_index_help++)
+	{
+		this->uf_table[i_current_table_index_help] = pd_problem[i];
+	}
+	i_current_index_pd_problem += this->i_f_size;
+	//wczyt um wartosci
+	i_current_table_index_help = 0;
+	this->um_table = new double[this->i_m_size];
+	for (int i = i_current_index_pd_problem; i < i_current_index_pd_problem + this->i_m_size; i++, i_current_table_index_help++)
+	{
+		this->um_table[i_current_table_index_help] = pd_problem[i];
+	}
+	i_current_index_pd_problem += this->i_m_size;
+	//wczyt p wartosci
+	i_current_table_index_help = 0;
+	this->p_table = new double[this->i_s_size];
+	for (int i = i_current_index_pd_problem; i < i_current_index_pd_problem + this->i_s_size; i++, i_current_table_index_help++)
+	{
+		this->p_table[i_current_table_index_help] = pd_problem[i];
+	}
+	i_current_index_pd_problem += this->i_s_size;
+	//wczyt xdminmax
+	//init 
+	this->xd_min_max = new std::pair<double, double>*[this->i_d_size];
+	for (int i = 0; i < this->i_d_size; i++)
+	{
+		this->xd_min_max[i] = new std::pair<double, double>[this->i_f_size];
+	}
+
+	i_tab_length = this->i_d_size * this->i_f_size * 2;
+	i_line_index = 0;
+	i_column_index = 0;
+
+	for (int i = i_current_index_pd_problem; i < i_current_index_pd_problem + i_tab_length; i++, i_column_index++)
+	{
+		if (i_column_index == this->i_f_size)
+		{
+			i_line_index++;
+			i_column_index = 0;
+		}
+		this->xd_min_max[i_line_index][i_column_index].first = pd_problem[i++];
+		this->xd_min_max[i_line_index][i_column_index].second = pd_problem[i];
+	}
+	i_current_index_pd_problem += i_tab_length;
+
+	//wczyt xfminmax
+	this->xf_min_max = new std::pair<double, double>*[this->i_f_size];
+	for (int i = 0; i < this->i_f_size; i++)
+	{
+		this->xf_min_max[i] = new std::pair<double, double>[this->i_m_size];
+	}
+
+	i_tab_length = this->i_f_size * this->i_m_size * 2;
+	i_line_index = 0;
+	i_column_index = 0;
+
+	for (int i = i_current_index_pd_problem; i < i_current_index_pd_problem + i_tab_length; i++, i_column_index++)
+	{
+		if (i_column_index == this->i_m_size)
+		{
+			i_line_index++;
+			i_column_index = 0;
+		}
+		this->xf_min_max[i_line_index][i_column_index].first = pd_problem[i++];
+		this->xf_min_max[i_line_index][i_column_index].second = pd_problem[i];
+	}
+	i_current_index_pd_problem += i_tab_length;
+
+	//wczyt xmminmax
+
+	this->xm_min_max = new std::pair<double, double>*[this->i_m_size];
+	for (int i = 0; i < this->i_m_size; i++)
+	{
+		this->xf_min_max[i] = new std::pair<double, double>[this->i_s_size];
+	}
+
+	i_tab_length = this->i_m_size * this->i_s_size * 2;
+	i_line_index = 0;
+	i_column_index = 0;
+
+	for (int i = i_current_index_pd_problem; i < i_current_index_pd_problem + i_tab_length; i++, i_column_index++)
+	{
+		if (i_column_index == this->i_s_size)
+		{
+			i_line_index++;
+			i_column_index = 0;
+		}
+		this->xm_min_max[i_line_index][i_column_index].first = pd_problem[i++];
+		this->xm_min_max[i_line_index][i_column_index].second = pd_problem[i];
+	}
+	i_current_index_pd_problem += i_tab_length;
+
+	return true;
 }

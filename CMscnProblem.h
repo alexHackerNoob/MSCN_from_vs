@@ -50,13 +50,17 @@ public:
 	void vSetSizes(int i_d_length, int i_f_length, int i_m_length, int i_s_length);
 	//setValue methods
 	//two-dementional tables
-	bool setValueCD(double d_value, int i_x_index, int i_y_index);
-	bool setValueCF(double d_value, int i_x_index, int i_y_index);
-	bool setValueCM(double d_value, int i_x_index, int i_y_index);
+	bool bsetValueCD(double d_value, int i_x_index, int i_y_index);
+	bool bsetValueCF(double d_value, int i_x_index, int i_y_index);
+	bool bsetValueCM(double d_value, int i_x_index, int i_y_index);
 	//one-dementional tables
-	bool setValueSD(double d_value, int i_index);
-	bool setValueSF(double d_value, int i_index);
-	bool setValueSM(double d_value, int i_index);
-	bool setValueSS(double d_value, int i_index);
+	bool bsetValueSD(double d_value, int i_index);
+	bool bsetValueSF(double d_value, int i_index);
+	bool bsetValueSM(double d_value, int i_index);
+	bool bsetValueSS(double d_value, int i_index);
+	//get datas from pd_table
+	bool bGetDatasFromProblem(double* pd_solution, int i_size);
+	bool bGetDatasFromSolution(double* pd_table);
+
 };
 
