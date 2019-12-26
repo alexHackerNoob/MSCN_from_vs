@@ -1,6 +1,7 @@
 #include "CMscnProblem.h"
 void testMethod()
 {
+	
 	double *pd_problem = new double[21];
 	pd_problem[0] = 1;
 	pd_problem[1] = 1;
@@ -23,6 +24,7 @@ void testMethod()
 	pd_problem[18] = 100;
 	pd_problem[19] = 1;
 	pd_problem[20] = 100;
+	
 	double *pd_solution = new double[7];
 	pd_solution[0] = 1;
 	pd_solution[1] = 1;
@@ -33,10 +35,15 @@ void testMethod()
 	pd_solution[6] = 30;
 	CMscnProblem cm = CMscnProblem();
 	cm.bGetDatasFromProblem(pd_problem, 20);
-	cm.bGetDatasFromSolution(pd_solution, 7);
-	cout << endl << "----------------------------" << endl << "print datas" << endl;
+	//cm.bGetDatasFromSolution(pd_solution, 7);
+	//cout << endl << "----------------------------" << endl << "print datas" << endl;
 	cm.vPrintAllDatas();
 	delete pd_problem;
+	cout <<endl<< "------------------------------------------------" << endl;
+	double *d_mistake_num = new double;
+	cout << cm.dGetQuality(pd_solution, 7, d_mistake_num);
+	cout << endl << "mistake num: " << *d_mistake_num << endl;
+
 }
 int main()
 {

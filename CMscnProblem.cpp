@@ -710,24 +710,119 @@ void CMscnProblem::vPrintAllDatas()
 
 	cout << "i_s_size" << endl;
 	cout << this->i_s_size << endl;
-	/*
+}
 
-	//moc produzyjna
+double CMscnProblem::dGetQuality(double * pd_solution, int i_size, double * pd_mistake)
+{
+	if (pd_solution == NULL)
+	{
+		*pd_mistake = D_MISTAKE_TABLE_PD_SOLUTION_NOT_EXIST;
+		return NULL;
+	}
+	for (int i = 0; i < i_size; i++)
+	{
+		if (pd_solution[i] == NULL)
+		{
+			*pd_mistake = D_MISTAKE_TABLE_PD_SOLUTION_NOT_EXIST;
+			return NULL;
+		}
+	}
+	if (!(*this->b_if_set_pd_problem)) 
+	{
+		*pd_mistake = D_MISTAKE_NOT_EXIST_PD_PROBLEM;
+		return NULL;
+	}
+	else 
+	{
+		if (!this->bGetDatasFromSolution(pd_solution, i_size))
+		{
+			*pd_mistake = D_ANOTHER_PROBLEM;
+			return NULL;
+		}
+		else 
+		{
+			*pd_mistake = D_NO_NISTAKE;
+			double d_finish_profit = 0;
+			double d_k_t = 0;
+			double d_k_u = 0;
+			double d_p = 0;
+			//sum cd xd
+			for (int i = 0; i < this->i_d_size; i++)
+			{
+				for (int j = 0; j < this->i_f_size; j++)
+				{
+					d_k_t += this->cd_table[i][j] * this->xd_table[i][j];
+				}
+			}
 
+			//sum cf xf
+			for (int i = 0; i < this->i_f_size; i++)
+			{
+				for (int j = 0; j < this->i_m_size; j++)
+				{
+					d_k_t += this->cf_table[i][j] * this->xf_table[i][j];
+				}
+			}
 
+			//sum cm cm
 
+			for (int i = 0; i < this->i_m_size; i++)
+			{
+				for (int j = 0; j < this->i_s_size; j++)
+				{
+					d_k_t += this->cm_table[i][j] * this->xm_table[i][j];
+				}
+			}
 
+			//d_k_u
 
-	//parametrs of solution
-	double **xd_table;
-	double **xf_table;
-	double **xm_table;
-	//size of elements
-	int i_d_size;
-	int i_f_size;
-	int i_m_size;
-	int i_s_size;
-	*/
+			for (int i = 0; i < this->i_d_size; i++)
+			{
+				double d_sum_xd_f = 0;
+				double d_pseudo_b_helper = 0;
+				for (int j = 0; j < this->i_f_size; j++)
+				{
+					d_sum_xd_f += this->xd_table[i][j];
+				}
+				if (d_sum_xd_f > 0) d_pseudo_b_helper = 1;
+				d_k_u += d_pseudo_b_helper * this->ud_table[i];
+			}
+
+			for (int i = 0; i < this->i_f_size; i++)
+			{
+				double d_sum_xf_m = 0;
+				double d_pseudo_b_helper = 0;
+				for (int j = 0; j < this->i_m_size; j++)
+				{
+					d_sum_xf_m += this->xf_table[i][j];
+				}
+				if (d_sum_xf_m > 0) d_pseudo_b_helper = 1;
+				d_k_u += d_sum_xf_m * this->uf_table[i];
+			}
+
+			for (int i = 0; i < this->i_m_size; i++)
+			{
+				double d_sum_xm_s = 0;
+				double d_pseudo_b_helper = 0;
+				for (int j = 0; j < this->i_s_size; j++)
+				{
+					d_sum_xm_s += this->xm_table[i][j];
+				}
+				if (d_sum_xm_s > 0) d_pseudo_b_helper = 1;
+				d_k_u += d_sum_xm_s * this->um_table[i];
+			}
+			//d_p
+			for (int i = 0; i < this->i_m_size; i++)
+			{
+				for (int j = 0; j < this->i_s_size; j++)
+				{
+					d_p += this->p_table[j] * this->xm_table[i][j];
+				}
+			}
+			d_finish_profit = d_p - d_k_t - d_k_u;
+			return d_finish_profit;
+		}
+	}
 }
 
 

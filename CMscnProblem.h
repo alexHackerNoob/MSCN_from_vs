@@ -1,6 +1,11 @@
 #pragma once
 using namespace std;
-#include <iostream>
+#include <iostream> 
+#define D_NO_NISTAKE 0;
+#define D_MISTAKE_TABLE_PD_SOLUTION_NOT_EXIST 1; 
+#define D_MISTAKE_TABLE_VALUES 2;
+#define D_MISTAKE_NOT_EXIST_PD_PROBLEM 3; 
+#define D_ANOTHER_PROBLEM 4;
 class CMscnProblem
 {
 private:
@@ -70,5 +75,6 @@ public:
 	bool bGetDatasFromProblem(double* pd_problem, int i_size);
 	bool bGetDatasFromSolution(double* pd_solution, int i_size);
 	void vPrintAllDatas();
+	double dGetQuality(double *pd_solution, int i_size, double *pd_mistake);
 };
 
