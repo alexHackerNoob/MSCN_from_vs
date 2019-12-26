@@ -1,4 +1,43 @@
 #include "CMscnProblem.h"
+void testMethod()
+{
+	double *pd_problem = new double[21];
+	pd_problem[0] = 1;
+	pd_problem[1] = 1;
+	pd_problem[2] = 1;
+	pd_problem[3] = 1;
+	pd_problem[4] = 100;
+	pd_problem[5] = 50;
+	pd_problem[6] = 10.5;
+	pd_problem[7] = 100;
+	pd_problem[8] = 3;
+	pd_problem[9] = 4;
+	pd_problem[10] = 1;
+	pd_problem[11] = 10;
+	pd_problem[12] = 10;
+	pd_problem[13] = 100;
+	pd_problem[14] = 300.5;
+	pd_problem[15] = 1;
+	pd_problem[16] = 100;
+	pd_problem[17] = 1;
+	pd_problem[18] = 100;
+	pd_problem[19] = 1;
+	pd_problem[20] = 100;
+	double *pd_solution = new double[7];
+	pd_solution[0] = 1;
+	pd_solution[1] = 1;
+	pd_solution[2] = 1;
+	pd_solution[3] = 1;
+	pd_solution[4] = 30;
+	pd_solution[5] = 30;
+	pd_solution[6] = 30;
+	CMscnProblem cm = CMscnProblem();
+	cm.bGetDatasFromProblem(pd_problem, 20);
+	cm.bGetDatasFromSolution(pd_solution, 7);
+	cout << endl << "----------------------------" << endl << "print datas" << endl;
+	cm.vPrintAllDatas();
+	delete pd_problem;
+}
 int main()
 {
 	{
@@ -42,31 +81,7 @@ int main()
 		}
 		delete xd_min_max;
 		*/
-		double *pd_problem = new double[21];
-		pd_problem[0] = 1;
-		pd_problem[1] = 1;
-		pd_problem[2] = 1;
-		pd_problem[3] = 1;
-		pd_problem[4] = 100;
-		pd_problem[5] = 50;
-		pd_problem[6] = 10.5;
-		pd_problem[7] = 100;
-		pd_problem[8] = 3;
-		pd_problem[9] = 4;
-		pd_problem[10] = 1;
-		pd_problem[11] = 10;
-		pd_problem[12] = 10;
-		pd_problem[13] = 100;
-		pd_problem[14] = 300.5;
-		pd_problem[15] = 1;
-		pd_problem[16] = 100;
-		pd_problem[17] = 1;
-		pd_problem[18] = 100;
-		pd_problem[19] = 1;
-		pd_problem[20] = 100;
-		CMscnProblem cm = CMscnProblem();
-		cm.bGetDatasFromProblem(pd_problem, 20);
-		delete pd_problem;
+		testMethod();
 
 	}
 	system("pause");

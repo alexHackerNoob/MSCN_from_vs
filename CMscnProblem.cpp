@@ -5,13 +5,14 @@
 CMscnProblem::CMscnProblem()
 {
 	this->b_if_good_init = new bool;
-
+	this->b_if_set_pd_problem = new bool;
 	this->b_if_good_pd_solution = new bool;
 	this->b_if_was_set_value = new bool;
 	*(this->b_if_good_init) = true;
 
 	*(this->b_if_good_pd_solution) = true;
 	*(this->b_if_was_set_value) = false;
+	*(this->b_if_set_pd_problem) = false;
 	this->i_d_size = 0;
 	this->i_f_size = 0;
 	this->i_m_size = 0;
@@ -34,7 +35,7 @@ CMscnProblem::~CMscnProblem()
 	delete this->b_if_was_set_value;
 	delete this->b_if_good_init;
 	delete this->b_if_good_pd_solution;
-
+	delete this->b_if_set_pd_problem;
 	//delete another parametrs
 	this->vDeleteOneDimensionalArray(this->ud_table);
 	this->vDeleteOneDimensionalArray(this->uf_table);
@@ -79,6 +80,105 @@ void CMscnProblem::vDeleteTwoDementionalArray(std::pair<double, double>** pp_poi
 		delete pp_pointer;
 	}
 }
+
+void CMscnProblem::vPrintBoolPointer(bool * pb_pointer)
+{
+	if (pb_pointer != NULL)
+	{
+		cout << *pb_pointer << endl;
+	}
+	else 
+	{
+		cout << "mistake initial bool pointer";
+	}
+}
+
+void CMscnProblem::vPrintOneDemensionalArray(double * pd_table, int i_size)
+{
+	if (pd_table != NULL)
+	{
+
+		for (int i = 0; i < i_size; i++)
+		{
+			cout << pd_table[i] << " ";
+		}
+		cout << endl;
+	}
+	else
+	{
+		cout << "mistaken init (double *) pd_table ";
+	}
+}
+
+void CMscnProblem::vPrintTwoDementionalArray(double ** pd_table, int i_line_size, int i_column_size)
+{
+	if (pd_table == NULL)
+	{
+		cout << "bad init (double **)pd_table";
+	}
+	else 
+	{
+		bool if_good_init = true;
+		for (int i = 0; i < i_line_size; i++)
+		{
+			if (pd_table[i] == NULL)
+			{
+				if_good_init = false;
+			}
+		}
+		if (!if_good_init)
+		{
+			cout << "bad init (double **)pd_table";
+		}
+		else 
+		{
+			for (int i = 0; i < i_line_size; i++)
+			{
+				for (int j = 0; j < i_column_size; j++)
+				{
+					cout << pd_table[i][j] << " ";
+				}
+				cout << endl;
+			}
+		}
+	}
+}
+
+void CMscnProblem::vPrintTwoDementionalArray(std::pair<double, double>** pp_pointer, int i_line_size, int i_column_size)
+{
+	if (pp_pointer == NULL)
+	{
+		cout << "bad init (std::pair<double, double>**)pd_table";
+	}
+	else
+	{
+		bool if_good_init = true;
+		for (int i = 0; i < i_line_size; i++)
+		{
+			if (pp_pointer[i] == NULL)
+			{
+				if_good_init = false;
+			}
+		}
+		if (!if_good_init)
+		{
+			cout << "bad init (std::pair<double, double>**)pd_table";
+		}
+		else
+		{
+			for (int i = 0; i < i_line_size; i++)
+			{
+				for (int j = 0; j < i_column_size; j++)
+				{
+					cout << pp_pointer[i][j].first << " " << pp_pointer[i][j].second << "     ";
+				}
+				cout << endl;
+			}
+		}
+	}
+}
+
+
 
 bool CMscnProblem::bGetIfGoodInit()
 {
@@ -249,6 +349,10 @@ bool CMscnProblem::bsetValueSS(double d_value, int i_index)
 bool CMscnProblem::bGetDatasFromProblem(double * pd_problem, int i_size)
 {
 	if (pd_problem == NULL || i_size <= 0) return false;
+	for (int i = 0; i < i_size; i++)
+	{
+		if (pd_problem[i] == NULL) return false;
+	}
 	for (int i = 0; i < i_size; i++)
 	{
 		if (pd_problem[i] <= 0) return false;
@@ -439,6 +543,191 @@ bool CMscnProblem::bGetDatasFromProblem(double * pd_problem, int i_size)
 		this->xm_min_max[i_line_index][i_column_index].second = pd_problem[i];
 	}
 	i_current_index_pd_problem += i_tab_length;
-
+	*this->b_if_set_pd_problem = true;
 	return true;
 }
+
+bool CMscnProblem::bGetDatasFromSolution(double * pd_solution, int i_size)
+{
+	//x can be 0
+	if (i_size <= 0 || pd_solution == NULL || !(*this->b_if_set_pd_problem)) return false;
+	for (int i = 0; i < i_size; i++)
+	{
+		if (pd_solution[i] == NULL) return false;
+	}
+	for (int i = 0; i < i_size; i++)
+	{
+		if (pd_solution[i] < 0) return false;
+	}
+	int i_current_index_pd_solution = 0;
+	if (this->i_d_size != pd_solution[i_current_index_pd_solution++]) return false;
+	if (this->i_f_size != pd_solution[i_current_index_pd_solution++]) return false;
+	if (this->i_m_size != pd_solution[i_current_index_pd_solution++]) return false;
+	if (this->i_s_size != pd_solution[i_current_index_pd_solution++]) return false;
+	//xd two-dementional
+
+	//init
+	this->xd_table = new double*[this->i_d_size];
+	for (int i = 0; i < this->i_d_size; i++)
+	{
+		this->xd_table[i] = new double[this->i_f_size];
+	}
+
+	int i_tab_length_help = this->i_d_size * this->i_f_size;
+	int i_line_index = 0;
+	int i_column_index = 0;
+	for (int i = i_current_index_pd_solution; i < i_tab_length_help + i_current_index_pd_solution; i++)
+	{
+		if (i_column_index == this->i_f_size)
+		{
+			i_column_index = 0;
+			i_line_index++;
+		}
+		this->xd_table[i_line_index][i_column_index] = pd_solution[i];
+	}
+	i_current_index_pd_solution += i_tab_length_help;
+	//xf
+
+	//init
+	this->xf_table = new double*[this->i_f_size];
+	for (int i = 0; i < this->i_f_size; i++)
+	{
+		this->xf_table[i] = new double[this->i_m_size];
+	}
+
+	i_tab_length_help = this->i_f_size * this->i_m_size;
+	i_line_index = 0;
+	i_column_index = 0;
+	for (int i = i_current_index_pd_solution; i < i_tab_length_help + i_current_index_pd_solution; i++)
+	{
+		if (i_column_index == this->i_m_size)
+		{
+			i_column_index = 0;
+			i_line_index++;
+		}
+		this->xf_table[i_line_index][i_column_index] = pd_solution[i];
+	}
+	i_current_index_pd_solution += i_tab_length_help;
+
+	//xm
+
+	//init
+	this->xm_table = new double*[this->i_m_size];
+	for (int i = 0; i < this->i_m_size; i++)
+	{
+		this->xm_table[i] = new double[this->i_s_size];
+	}
+
+	i_tab_length_help = this->i_m_size * this->i_s_size;
+    i_line_index = 0;
+	i_column_index = 0;
+	for (int i = i_current_index_pd_solution; i < i_tab_length_help + i_current_index_pd_solution; i++)
+	{
+		if (i_column_index == this->i_s_size)
+		{
+			i_column_index = 0;
+			i_line_index++;
+		}
+		this->xm_table[i_line_index][i_column_index] = pd_solution[i];
+	}
+	i_current_index_pd_solution += i_tab_length_help;
+	return true;
+}
+
+void CMscnProblem::vPrintAllDatas()
+{
+	cout << "b_if_good_init" << endl;
+	this->vPrintBoolPointer(this->b_if_good_init);
+
+	cout << "b_if_good_pd_solution" << endl;
+	this->vPrintBoolPointer(this->b_if_good_pd_solution);
+
+	cout << "b_if_was_set_value" << endl;
+	this->vPrintBoolPointer(this->b_if_was_set_value);
+
+	cout << "b_if_set_pd_problem" << endl;
+	this->vPrintBoolPointer(this->b_if_set_pd_problem);
+
+	cout << "cd_table" << endl;
+	this->vPrintTwoDementionalArray(this->cd_table, this->i_d_size, this->i_f_size);
+
+	cout << "cf_table" << endl;
+	this->vPrintTwoDementionalArray(this->cf_table, this->i_f_size, this->i_m_size);
+	
+	cout << "cm_table" << endl;
+	this->vPrintTwoDementionalArray(this->cm_table, this->i_m_size, this->i_s_size);
+
+	cout << "sd_table" <<endl;
+	this->vPrintOneDemensionalArray(this->sd_table, this->i_d_size);
+
+    cout << "sf_table" << endl;
+	this->vPrintOneDemensionalArray(this->sf_table, this->i_f_size);
+
+	cout << "sm_table" << endl;
+	this->vPrintOneDemensionalArray(this->sm_table, this->i_m_size);
+
+	cout << "ss_table" << endl;
+	this->vPrintOneDemensionalArray(this->ss_table, this->i_s_size);
+
+	cout << "ud_table" << endl;
+	this->vPrintOneDemensionalArray(this->ud_table, this->i_d_size);
+
+	cout << "uf_table" << endl;
+	this->vPrintOneDemensionalArray(this->uf_table, this->i_f_size);
+
+	cout << "um_table" << endl;
+	this->vPrintOneDemensionalArray(this->um_table, this->i_m_size);
+
+	cout << "p_table" << endl;
+	this->vPrintOneDemensionalArray(this->p_table, this->i_s_size);
+
+	cout << "xd_min_max" << endl;
+	this->vPrintTwoDementionalArray(this->xd_min_max, this->i_d_size, this->i_f_size);
+
+	cout << "xf_min_max" << endl;
+	this->vPrintTwoDementionalArray(this->xf_min_max, this->i_f_size, this->i_m_size);
+
+	cout << "xm_min_max" << endl;
+	this->vPrintTwoDementionalArray(this->xm_min_max, this->i_m_size, this->i_s_size);
+
+	cout << "xd_table" << endl;
+	this->vPrintTwoDementionalArray(this->xd_table, this->i_d_size, this->i_f_size);
+
+	cout << "xf_table" << endl;
+	this->vPrintTwoDementionalArray(this->xf_table, this->i_f_size, this->i_m_size);
+
+	cout << "xm_table" << endl;
+	this->vPrintTwoDementionalArray(this->xm_table, this->i_m_size, this->i_s_size);
+
+	cout << "i_d_size" << endl;
+	cout << this->i_d_size << endl;
+
+	cout << "i_f_size" << endl;
+	cout << this->i_f_size << endl;
+
+	cout << "i_m_size" << endl;
+	cout << this->i_m_size << endl;
+
+	cout << "i_s_size" << endl;
+	cout << this->i_s_size << endl;
+	/*
+
+	//moc produzyjna
+
+
+
+
+
+	//parametrs of solution
+	double **xd_table;
+	double **xf_table;
+	double **xm_table;
+	//size of elements
+	int i_d_size;
+	int i_f_size;
+	int i_m_size;
+	int i_s_size;
+	*/
+}
+
+
