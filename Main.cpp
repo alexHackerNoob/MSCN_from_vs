@@ -1,4 +1,8 @@
 #include "CMscnProblem.h"
+#include "ReadPdProblem.h"
+#pragma warning(disable:4996)
+#include <iostream>
+#include <vector>
 void testMethod()
 {
 	
@@ -44,6 +48,21 @@ void testMethod()
 	cout << cm.dGetQuality(pd_solution, 7, d_mistake_num);
 	cout << endl << "mistake num: " << *d_mistake_num << endl;
 
+	FILE *fp;
+	char str[128];
+	std::vector<string> v1(0);
+	if ((fp = fopen("file.txt", "r")) == NULL) {
+		printf("Cannot open file.\n");
+		exit(1);
+	}
+	while (!feof(fp)) {
+		if (fgets(str, 10, fp))
+			printf("%s", str);
+		v1.push_back(str);
+	}
+	fclose(fp);
+	
+
 }
 int main()
 {
@@ -88,8 +107,10 @@ int main()
 		}
 		delete xd_min_max;
 		*/
-		testMethod();
-
+		//testMethod();
+		ReadPdProblem r_pd_pr("file.txt");
+		r_pd_pr.v_read_from_file();
+		r_pd_pr.v_print_pd_problem();
 	}
 	system("pause");
 	return 0;
