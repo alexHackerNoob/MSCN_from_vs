@@ -1053,4 +1053,75 @@ bool CMscnProblem::writeProblem(string s_file_name)
 	return true;
 }
 
+bool CMscnProblem::writeSolution(string s_file_name)
+{
+	string s_to_write = "";
+	s_to_write += "D " + to_string(this->i_d_size);
+	s_to_write += "\n";
+	s_to_write += "F " + to_string(this->i_d_size);
+	s_to_write += "\n";
+	s_to_write += "M " + to_string(this->i_d_size);
+	s_to_write += "\n";
+	s_to_write += "S " + to_string(this->i_s_size);
+	s_to_write += "\n";
+
+	//xd
+
+	s_to_write += "xd";
+	s_to_write += "\n";
+	for (int i = 0; i < this->i_d_size; i++)
+	{
+		for (int j = 0; j < this->i_f_size; j++)
+		{
+			s_to_write += to_string(this->xd_table[i][j]);
+			if (j != this->i_f_size - 1) s_to_write += " ";
+		}
+		if (this->i_d_size - 1 != i) s_to_write += "\n";
+	}
+
+	s_to_write += "\n";
+	s_to_write += "xf";
+	s_to_write += "\n";
+	for (int i = 0; i < this->i_f_size; i++)
+	{
+		for (int j = 0; j < this->i_m_size; j++)
+		{
+			s_to_write += to_string(this->xf_table[i][j]);
+			if (j != this->i_m_size - 1) s_to_write += " ";
+		}
+		if (this->i_f_size - 1 != i) s_to_write += "\n";
+	}
+
+
+	s_to_write += "\n";
+	s_to_write += "xm";
+	s_to_write += "\n";
+	for (int i = 0; i < this->i_m_size; i++)
+	{
+		for (int j = 0; j < this->i_s_size; j++)
+		{
+			s_to_write += to_string(this->xm_table[i][j]);
+			if (j != this->i_s_size - 1) s_to_write += " ";
+		}
+		if (this->i_m_size - 1 != i) s_to_write += "\n";
+	}
+
+
+	FILE *file = fopen(s_file_name.c_str(), "w");
+
+
+	if (file != NULL) // если есть доступ к файлу,
+	{
+		// инициализируем строку
+		bool result = fputs(s_to_write.c_str(), file); // и записываем ее в файл
+		if (!result) // если запись произошла успешно
+			cout << "no mistakes in open file and put in " << endl; // выводим сообщение
+	}
+	else
+		cout << "nistakes in open file";
+	fclose(file);
+
+	return true;
+}
+
 

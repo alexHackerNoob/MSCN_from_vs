@@ -49,6 +49,8 @@ void testMethod()
 	cout << cm.dGetQuality(pd_solution, 7, d_mistake_num);
 	cout << endl << "mistake num: " << *d_mistake_num << endl;
 	cm.writeProblem("chuj.txt");
+
+	cm.writeSolution("chujSolution.txt");
 	/*
 	FILE *fp;
 	char str[128];

@@ -62,6 +62,8 @@ public:
 	bool bGetIfGoodInit();
 	bool bGetIfGoodPdSolution();
 	void vSetSizes(int i_d_length, int i_f_length, int i_m_length, int i_s_length);
+    //need to be init
+	bool ifAllExist();
 	//setValue methods
 	//two-dementional tables
 	bool bsetValueCD(double d_value, int i_x_index, int i_y_index);
@@ -78,6 +80,6 @@ public:
 	void vPrintAllDatas();
 	double dGetQuality(double *pd_solution, int i_size, double *pd_mistake);
 	bool writeProblem(string s_file_name);
-
+	bool writeSolution(string s_file_name);
 };
 
