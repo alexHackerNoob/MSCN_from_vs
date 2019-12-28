@@ -1,5 +1,6 @@
 #include "CMscnProblem.h"
 #include "ReadPdProblem.h"
+#include "ReadPdSolution.h"
 #pragma warning(disable:4996)
 #include <iostream>
 #include <vector>
@@ -108,9 +109,13 @@ int main()
 		delete xd_min_max;
 		*/
 		//testMethod();
-		ReadPdProblem r_pd_pr("file.txt");
+		ReadPdProblem r_pd_pr("f_read_problem.txt");
 		r_pd_pr.v_read_from_file();
 		r_pd_pr.v_print_pd_problem();
+
+		ReadPdSolution r_pd_sol("f_read_solution.txt");
+		r_pd_sol.vReadFromFile();
+		r_pd_sol.vPrintPdSolution();
 	}
 	system("pause");
 	return 0;

@@ -1,22 +1,28 @@
-#include "ReadPdProblem.h"
+#include "ReadPdSolution.h"
 
 
-#include <stdlib.h>
 
 
-ReadPdProblem::ReadPdProblem(string s_file_name)
+
+void ReadPdSolution::vPrintPdTable(double * pd_table, int i_size)
+{
+	if (pd_table != NULL)
+		for (int i = 0; i < i_size; i++)
+			cout << *(pd_table + i) << endl;
+}
+
+ReadPdSolution::ReadPdSolution(string s_file_name)
 {
 	this->s_file_name = s_file_name;
 	this->i_pd_double_size = 0;
 }
 
-
-ReadPdProblem::~ReadPdProblem()
+ReadPdSolution::~ReadPdSolution()
 {
-	if (this->pd_problem != NULL) delete this->pd_problem;
+	if (this->pd_solution != NULL) delete this->pd_solution;
 }
 
-void ReadPdProblem::v_read_from_file()
+void ReadPdSolution::vReadFromFile()
 {
 	std::vector<string> vector_to_rem(0);
 	vector_to_rem.push_back("\n");
@@ -24,20 +30,9 @@ void ReadPdProblem::v_read_from_file()
 	vector_to_rem.push_back("F");
 	vector_to_rem.push_back("M");
 	vector_to_rem.push_back("S");
-	vector_to_rem.push_back("sd");
-	vector_to_rem.push_back("sf");
-	vector_to_rem.push_back("sm");
-	vector_to_rem.push_back("ss");
-	vector_to_rem.push_back("cd");
-	vector_to_rem.push_back("cf");
-	vector_to_rem.push_back("cm");
-	vector_to_rem.push_back("ud");
-	vector_to_rem.push_back("uf");
-	vector_to_rem.push_back("um");
-	vector_to_rem.push_back("p");
-	vector_to_rem.push_back("xdminmax");
-	vector_to_rem.push_back("xfminmax");
-	vector_to_rem.push_back("xmminmax");
+	vector_to_rem.push_back("xd");
+	vector_to_rem.push_back("xf");
+	vector_to_rem.push_back("xm");
 	//make array of lines
 	char str[128];
 	std::vector<string> vector_unuse_condition_of_elements(0);
@@ -104,25 +99,17 @@ void ReadPdProblem::v_read_from_file()
 		}
 		fclose(this->pf_file);
 		//create pd_problem (redefine type)
-		this->pd_problem = new double[vector_pre_finish.size()];
+		this->pd_solution = new double[vector_pre_finish.size()];
 		this->i_pd_double_size = vector_pre_finish.size();
 		for (int i = 0; i < vector_pre_finish.size(); i++)
 		{
 			double d_element = stod(vector_pre_finish[i].c_str());
-			this->pd_problem[i] = d_element;
+			this->pd_solution[i] = d_element;
 		}
 	}
 }
 
-void ReadPdProblem::v_print_pd_problem()
+void ReadPdSolution::vPrintPdSolution()
 {
-	this->v_print_pd_table(this->pd_problem, i_pd_double_size);
-}
-
-void ReadPdProblem::v_print_pd_table(double * pd_table, int i_size)
-{
-	cout << endl;
-	if (pd_table != NULL)
-		for (int i = 0; i < i_size; i++)
-			cout << *(pd_table + i) << endl;
+	this->vPrintPdTable(this->pd_solution, this->i_pd_double_size);
 }
