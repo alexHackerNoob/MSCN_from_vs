@@ -48,7 +48,8 @@ void testMethod()
 	double *d_mistake_num = new double;
 	cout << cm.dGetQuality(pd_solution, 7, d_mistake_num);
 	cout << endl << "mistake num: " << *d_mistake_num << endl;
-
+	cm.writeProblem("chuj.txt");
+	/*
 	FILE *fp;
 	char str[128];
 	std::vector<string> v1(0);
@@ -62,7 +63,7 @@ void testMethod()
 		v1.push_back(str);
 	}
 	fclose(fp);
-	
+	*/
 
 }
 int main()
@@ -108,7 +109,9 @@ int main()
 		}
 		delete xd_min_max;
 		*/
-		//testMethod();
+		testMethod();
+
+			/*
 		ReadPdProblem r_pd_pr("f_read_problem.txt");
 		r_pd_pr.v_read_from_file();
 		r_pd_pr.v_print_pd_problem();
@@ -116,6 +119,7 @@ int main()
 		ReadPdSolution r_pd_sol("f_read_solution.txt");
 		r_pd_sol.vReadFromFile();
 		r_pd_sol.vPrintPdSolution();
+		*/
 	}
 	system("pause");
 	return 0;

@@ -6,6 +6,7 @@ using namespace std;
 #define D_MISTAKE_TABLE_VALUES 2;
 #define D_MISTAKE_NOT_EXIST_PD_PROBLEM 3; 
 #define D_ANOTHER_PROBLEM 4;
+#pragma warning(disable:4996)
 class CMscnProblem
 {
 private:
@@ -76,5 +77,7 @@ public:
 	bool bGetDatasFromSolution(double* pd_solution, int i_size);
 	void vPrintAllDatas();
 	double dGetQuality(double *pd_solution, int i_size, double *pd_mistake);
+	bool writeProblem(string s_file_name);
+
 };
 

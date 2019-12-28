@@ -1,6 +1,6 @@
 #include "CMscnProblem.h"
 
-
+#include <string> 
 
 CMscnProblem::CMscnProblem()
 {
@@ -823,6 +823,234 @@ double CMscnProblem::dGetQuality(double * pd_solution, int i_size, double * pd_m
 			return d_finish_profit;
 		}
 	}
+}
+
+bool CMscnProblem::writeProblem(string s_file_name)
+{
+	string s_to_write = "";
+	s_to_write += "D "+to_string(this->i_d_size);
+	s_to_write += "\n";
+
+	s_to_write += "F "; s_to_write += to_string(this->i_f_size);
+	s_to_write += "\n";
+	
+	s_to_write += "M " + to_string(this->i_m_size);
+	s_to_write += "\n";
+
+	s_to_write += "S " + to_string(this->i_s_size);
+	s_to_write += "\n";
+
+	s_to_write += "sd";
+	s_to_write += "\n";
+	for (int i = 0; i < this->i_d_size; i++)
+	{
+		s_to_write += to_string(this->sd_table[i]);
+		if (i != this->i_d_size) s_to_write += " ";
+	}
+
+	s_to_write += "\n";
+	s_to_write += "sf";
+	s_to_write += "\n";
+
+	for (int i = 0; i < this->i_f_size; i++)
+	{
+		s_to_write += this->sf_table[i];
+		if (i != this->i_f_size) s_to_write += " ";
+	}
+
+	s_to_write += "\n";
+	s_to_write += "sm";
+	s_to_write += "\n";
+
+	for (int i = 0; i < this->i_m_size; i++)
+	{
+		s_to_write += to_string(this->sm_table[i]);
+		if (i != this->i_m_size) s_to_write += " ";
+	}
+
+	s_to_write += "\n";
+	s_to_write += "ss";
+	s_to_write += "\n";
+
+	for (int i = 0; i < this->i_s_size; i++)
+	{
+		s_to_write += to_string(this->ss_table[i]);
+		if (i != this->i_s_size) s_to_write += " ";
+	}
+
+	s_to_write += "\n";
+	s_to_write += "cd";
+	s_to_write += "\n";
+	
+
+	for (int i = 0; i < this->i_d_size; i++)
+	{
+		for (int j = 0; j < this->i_f_size; j++)
+		{
+			s_to_write += to_string(this->cd_table[i][j]);
+			if (j != this->i_f_size - 1)
+			{
+				s_to_write += " ";
+			}
+		}
+		if (i != i_d_size - 1) s_to_write += "\n";
+	}
+
+
+
+	s_to_write += "\n";
+	s_to_write += "cf";
+	s_to_write += "\n";
+
+
+	for (int i = 0; i < this->i_f_size; i++)
+	{
+		for (int j = 0; j < this->i_m_size; j++)
+		{
+			s_to_write += to_string(this->cf_table[i][j]);
+			if (j != this->i_m_size - 1)
+			{
+				s_to_write += " ";
+			}
+		}
+		if (i != i_f_size - 1) s_to_write += "\n";
+	}
+
+
+
+	s_to_write += "\n";
+	s_to_write += "cm";
+	s_to_write += "\n";
+
+
+	for (int i = 0; i < this->i_m_size; i++)
+	{
+		for (int j = 0; j < this->i_s_size; j++)
+		{
+			s_to_write += to_string(this->cm_table[i][j]);
+			if (j != this->i_s_size - 1)
+			{
+				s_to_write += " ";
+			}
+		}
+		if (i != i_m_size - 1) s_to_write += "\n";
+	}
+
+
+
+
+	s_to_write += "\n";
+	s_to_write += "ud";
+	s_to_write += "\n";
+
+	for (int i = 0; i < this->i_d_size; i++)
+	{
+		s_to_write += to_string(this->ud_table[i]);
+		if (i != i_d_size - 1) s_to_write += " ";
+	}
+
+
+
+	s_to_write += "\n";
+	s_to_write += "uf";
+	s_to_write += "\n";
+
+	for (int i = 0; i < this->i_f_size; i++)
+	{
+		s_to_write += to_string(this->uf_table[i]);
+		if (i != i_f_size - 1) s_to_write += " ";
+	}
+
+
+
+
+
+	s_to_write += "\n";
+	s_to_write += "um";
+	s_to_write += "\n";
+
+	for (int i = 0; i < this->i_m_size; i++)
+	{
+		s_to_write += to_string(this->um_table[i]);
+		if (i != i_m_size - 1) s_to_write += " ";
+	}
+
+
+
+	s_to_write += "\n";
+	s_to_write += "p";
+	s_to_write += "\n";
+
+	for (int i = 0; i < this->i_s_size; i++)
+	{
+		s_to_write += to_string(this->p_table[i]);
+		if (i != i_s_size - 1) s_to_write += " ";
+	}
+
+	s_to_write += "\n";
+	s_to_write += "xdminmax";
+	s_to_write += "\n";
+
+
+	for (int i = 0; i < this->i_d_size; i++)
+	{
+		for (int j = 0; j < this->i_f_size; j++)
+		{
+			s_to_write += to_string(this->xd_min_max[i][j].first) + " " + to_string(this->xd_min_max[i][j].second);
+			if (j != this->i_f_size - 1) s_to_write += " ";
+		}
+		if (i != this->i_d_size - 1) s_to_write += "\n";
+	}
+
+
+
+	s_to_write += "\n";
+	s_to_write += "xfminmax";
+	s_to_write += "\n";
+
+
+	for (int i = 0; i < this->i_f_size; i++)
+	{
+		for (int j = 0; j < this->i_m_size; j++)
+		{
+			s_to_write += to_string(this->xf_min_max[i][j].first) + " " + to_string(this->xf_min_max[i][j].second);
+			if (j != this->i_m_size - 1) s_to_write += " ";
+		}
+		if (i != this->i_f_size - 1) s_to_write += "\n";
+	}
+
+	s_to_write += "\n";
+	s_to_write += "xmminmax";
+	s_to_write += "\n";
+
+
+	for (int i = 0; i < this->i_m_size; i++)
+	{
+		for (int j = 0; j < this->i_s_size; j++)
+		{
+			s_to_write += to_string(this->xm_min_max[i][j].first) + " " + to_string(this->xm_min_max[i][j].second);
+			if (j != this->i_s_size - 1) s_to_write += " ";
+		}
+		if (i != this->i_m_size - 1) s_to_write += "\n";
+	}
+
+	cout << endl << "-------------------------------" << endl;
+	cout << s_to_write.c_str() <<endl;
+	FILE *file = fopen(s_file_name.c_str(), "w");
+
+
+	if (file != NULL) // если есть доступ к файлу,
+	{
+		// инициализируем строку
+		bool result = fputs(s_to_write.c_str(), file); // и записываем ее в файл
+		if (!result) // если запись произошла успешно
+			cout << "no mistakes in open file and put in " << endl; // выводим сообщение
+	}
+	else
+		cout << "nistakes in open file";
+	fclose(file);
+	
+	return true;
 }
 
 
