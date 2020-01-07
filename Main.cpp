@@ -8,6 +8,7 @@ void testMethod()
 {
 	
 	double *pd_problem = new double[21];
+
 	pd_problem[0] = 1;
 	pd_problem[1] = 1;
 	pd_problem[2] = 1;
@@ -46,27 +47,12 @@ void testMethod()
 	delete pd_problem;
 	cout <<endl<< "------------------------------------------------" << endl;
 	double *d_mistake_num = new double;
-	cout << cm.dGetQuality(pd_solution, 7, d_mistake_num);
+	cout <<"profit of this solution: "<< cm.dGetQuality(pd_solution, 7, d_mistake_num) <<endl;
+	cm.vPrintAllDatas();
 	cout << endl << "mistake num: " << *d_mistake_num << endl;
 	cm.writeProblem("chuj.txt");
 
 	cm.writeSolution("chujSolution.txt");
-	/*
-	FILE *fp;
-	char str[128];
-	std::vector<string> v1(0);
-	if ((fp = fopen("file.txt", "r")) == NULL) {
-		printf("Cannot open file.\n");
-		exit(1);
-	}
-	while (!feof(fp)) {
-		if (fgets(str, 10, fp))
-			printf("%s", str);
-		v1.push_back(str);
-	}
-	fclose(fp);
-	*/
-
 }
 int main()
 {
@@ -122,6 +108,8 @@ int main()
 		r_pd_sol.vReadFromFile();
 		r_pd_sol.vPrintPdSolution();
 		*/
+		cout << "hello, world!";
+
 	}
 	system("pause");
 	return 0;

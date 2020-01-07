@@ -114,7 +114,7 @@ void CMscnProblem::vPrintTwoDementionalArray(double ** pd_table, int i_line_size
 {
 	if (pd_table == NULL)
 	{
-		cout << "bad init (double **)pd_table";
+		cout << "bad init (double **)pd_table"<<endl;
 	}
 	else 
 	{
@@ -797,7 +797,7 @@ double CMscnProblem::dGetQuality(double * pd_solution, int i_size, double * pd_m
 					d_sum_xf_m += this->xf_table[i][j];
 				}
 				if (d_sum_xf_m > 0) d_pseudo_b_helper = 1;
-				d_k_u += d_sum_xf_m * this->uf_table[i];
+				d_k_u += d_pseudo_b_helper * this->uf_table[i];
 			}
 
 			for (int i = 0; i < this->i_m_size; i++)
@@ -809,7 +809,7 @@ double CMscnProblem::dGetQuality(double * pd_solution, int i_size, double * pd_m
 					d_sum_xm_s += this->xm_table[i][j];
 				}
 				if (d_sum_xm_s > 0) d_pseudo_b_helper = 1;
-				d_k_u += d_sum_xm_s * this->um_table[i];
+				d_k_u += d_pseudo_b_helper * this->um_table[i];
 			}
 			//d_p
 			for (int i = 0; i < this->i_m_size; i++)
