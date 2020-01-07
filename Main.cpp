@@ -39,20 +39,43 @@ void testMethod()
 	pd_solution[4] = 30;
 	pd_solution[5] = 30;
 	pd_solution[6] = 30;
+	
 	CMscnProblem cm = CMscnProblem();
-	cm.bGetDatasFromProblem(pd_problem, 20);
+	ReadPdProblem r_pd_prob("f_write_problem.txt");
+	r_pd_prob.v_read_from_file();
+	r_pd_prob.v_print_pd_problem();
+	cm.bGetDatasFromProblem(r_pd_prob.dGetPdProblem(), r_pd_prob.iGetPdDoubleSize());
 	//cm.bGetDatasFromSolution(pd_solution, 7);
 	//cout << endl << "----------------------------" << endl << "print datas" << endl;
-	cm.vPrintAllDatas();
+	//cm.vPrintAllDatas();
 	delete pd_problem;
 	cout <<endl<< "------------------------------------------------" << endl;
 	double *d_mistake_num = new double;
-	cout <<"profit of this solution: "<< cm.dGetQuality(pd_solution, 7, d_mistake_num) <<endl;
+	ReadPdSolution r_pd_solution("f_write_solution.txt");
+	r_pd_solution.vReadFromFile();
+	cout << "---------------------------------";
+	r_pd_solution.vPrintPdSolution();
+	cout << "---------------------------------";
+	cout <<"profit of this solution: "<< cm.dGetQuality(r_pd_solution.dGetPdSolution(), r_pd_solution.iGetPdDoubleSize(), d_mistake_num) <<endl;
 	cm.vPrintAllDatas();
 	cout << endl << "mistake num: " << *d_mistake_num << endl;
-	cm.writeProblem("chuj.txt");
 
-	cm.writeSolution("chujSolution.txt");
+	if (cm.writeProblem("f_write_problem.txt")) 
+	{ 
+		cout << endl << "succesful written problem"<<endl;
+	}
+	else 
+	{
+		cout << endl << "error written problem"<<endl;
+	}
+	if (cm.writeSolution("f_write_solution1.txt")) 
+	{
+		cout << endl << "succesful written solution" << endl;
+	}
+	else 
+	{
+		cout << endl << "error written solution" << endl;
+	}
 }
 int main()
 {
@@ -108,7 +131,6 @@ int main()
 		r_pd_sol.vReadFromFile();
 		r_pd_sol.vPrintPdSolution();
 		*/
-		cout << "hello, world!";
 
 	}
 	system("pause");

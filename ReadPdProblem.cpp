@@ -75,7 +75,7 @@ void ReadPdProblem::v_read_from_file()
 		std::vector<string> vector_pre_finish(0);
 		for (int i = 0; i < vector_unuse_condition_of_elements.size(); i++)
 		{
-			if (vector_unuse_condition_of_elements[i] != "")
+			if (vector_unuse_condition_of_elements[i] != "" && vector_unuse_condition_of_elements[i] != " ")
 			{
 				string s_to_separate = " ";
 				int i_to_separete_index = vector_unuse_condition_of_elements[i].find(s_to_separate);
@@ -104,6 +104,7 @@ void ReadPdProblem::v_read_from_file()
 		}
 		fclose(this->pf_file);
 		//create pd_problem (redefine type)
+		vector_pre_finish = vDeleteUnnesesaryElements(vector_pre_finish);
 		this->pd_problem = new double[vector_pre_finish.size()];
 		this->i_pd_double_size = vector_pre_finish.size();
 		for (int i = 0; i < vector_pre_finish.size(); i++)
@@ -119,10 +120,33 @@ void ReadPdProblem::v_print_pd_problem()
 	this->v_print_pd_table(this->pd_problem, i_pd_double_size);
 }
 
+double *ReadPdProblem::dGetPdProblem()
+{
+	return this->pd_problem;
+}
+
+int ReadPdProblem::iGetPdDoubleSize()
+{
+	return this->i_pd_double_size ;
+}
+
 void ReadPdProblem::v_print_pd_table(double * pd_table, int i_size)
 {
 	cout << endl;
 	if (pd_table != NULL)
 		for (int i = 0; i < i_size; i++)
 			cout << *(pd_table + i) << endl;
+}
+
+std::vector<string> ReadPdProblem::vDeleteUnnesesaryElements(std::vector<string> vector)
+{
+	std::vector<string> v_to_return;
+	for (int i = 0; i < vector.size(); i++)
+	{
+		if (vector[i] != "" && vector[i] != " " && vector[i] != "0")
+		{
+			v_to_return.push_back(vector[i]);
+		}
+	}
+	return v_to_return;
 }

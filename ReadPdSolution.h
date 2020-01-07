@@ -17,5 +17,7 @@ public:
 	~ReadPdSolution();
 	void vReadFromFile();
 	void vPrintPdSolution();
+	double *dGetPdSolution();
+	int iGetPdDoubleSize();
 };
 

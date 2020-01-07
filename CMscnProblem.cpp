@@ -351,6 +351,7 @@ bool CMscnProblem::bGetDatasFromProblem(double * pd_problem, int i_size)
 	if (pd_problem == NULL || i_size <= 0) return false;
 	for (int i = 0; i < i_size; i++)
 	{
+		double num_help = pd_problem[i];
 		if (pd_problem[i] == NULL) return false;
 	}
 	for (int i = 0; i < i_size; i++)
@@ -729,7 +730,7 @@ double CMscnProblem::dGetQuality(double * pd_solution, int i_size, double * pd_m
 	}
 	if (!(*this->b_if_set_pd_problem)) 
 	{
-		*pd_mistake = D_MISTAKE_NOT_EXIST_PD_PROBLEM;
+		*pd_mistake = D_MISTAKE_ALREADY_EXIST_PD_PROBLEM;
 		return NULL;
 	}
 	else 
@@ -741,7 +742,6 @@ double CMscnProblem::dGetQuality(double * pd_solution, int i_size, double * pd_m
 		}
 		else 
 		{
-			*pd_mistake = D_NO_NISTAKE;
 			double d_finish_profit = 0;
 			double d_k_t = 0;
 			double d_k_u = 0;
@@ -820,6 +820,7 @@ double CMscnProblem::dGetQuality(double * pd_solution, int i_size, double * pd_m
 				}
 			}
 			d_finish_profit = d_p - d_k_t - d_k_u;
+			*pd_mistake = D_NO_NISTAKE;
 			return d_finish_profit;
 		}
 	}
@@ -851,12 +852,21 @@ bool CMscnProblem::writeProblem(string s_file_name)
 	s_to_write += "\n";
 	s_to_write += "sf";
 	s_to_write += "\n";
-
+	cout << endl << "-------------------------------" << endl;
+	cout << s_to_write.c_str() << endl;
 	for (int i = 0; i < this->i_f_size; i++)
 	{
-		s_to_write += this->sf_table[i];
+		double d_num = sf_table[i];
+		
+
+		auto str = std::to_string(d_num);
+		s_to_write += str;
+
 		if (i != this->i_f_size) s_to_write += " ";
 	}
+
+	cout << endl << "-------------------------------" << endl;
+	cout << s_to_write.c_str() << endl;
 
 	s_to_write += "\n";
 	s_to_write += "sm";
@@ -1038,19 +1048,22 @@ bool CMscnProblem::writeProblem(string s_file_name)
 	cout << s_to_write.c_str() <<endl;
 	FILE *file = fopen(s_file_name.c_str(), "w");
 
-
+	bool b_to_return = false;
 	if (file != NULL) // если есть доступ к файлу,
 	{
 		// инициализируем строку
 		bool result = fputs(s_to_write.c_str(), file); // и записываем ее в файл
 		if (!result) // если запись произошла успешно
+		{
 			cout << "no mistakes in open file and put in " << endl; // выводим сообщение
+			b_to_return = !result;
+		}
 	}
 	else
-		cout << "nistakes in open file";
+		cout << "mistakes in open file";
 	fclose(file);
 	
-	return true;
+	return b_to_return;
 }
 
 bool CMscnProblem::writeSolution(string s_file_name)
@@ -1109,19 +1122,23 @@ bool CMscnProblem::writeSolution(string s_file_name)
 
 	FILE *file = fopen(s_file_name.c_str(), "w");
 
-
+	bool b_to_return = false;
 	if (file != NULL) // если есть доступ к файлу,
 	{
 		// инициализируем строку
 		bool result = fputs(s_to_write.c_str(), file); // и записываем ее в файл
 		if (!result) // если запись произошла успешно
+		{
 			cout << "no mistakes in open file and put in " << endl; // выводим сообщение
+			b_to_return = !result;
+		}
+
 	}
 	else
 		cout << "nistakes in open file";
 	fclose(file);
 
-	return true;
+	return b_to_return;
 }
 
 

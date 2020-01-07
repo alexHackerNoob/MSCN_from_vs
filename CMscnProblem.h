@@ -4,7 +4,7 @@ using namespace std;
 #define D_NO_NISTAKE 0;
 #define D_MISTAKE_TABLE_PD_SOLUTION_NOT_EXIST 1; 
 #define D_MISTAKE_TABLE_VALUES 2;
-#define D_MISTAKE_NOT_EXIST_PD_PROBLEM 3; 
+#define D_MISTAKE_ALREADY_EXIST_PD_PROBLEM 3; 
 #define D_ANOTHER_PROBLEM 4;
 #pragma warning(disable:4996)
 class CMscnProblem

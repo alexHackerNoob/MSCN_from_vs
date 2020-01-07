@@ -12,10 +12,13 @@ private:
 	double *pd_problem;
 	int i_pd_double_size;
 	void v_print_pd_table(double* pd_table, int i_size);
+	std::vector<string> vDeleteUnnesesaryElements(std::vector<string> vector);
 public:
 	ReadPdProblem(string s_filename);
 	~ReadPdProblem();
 	void v_read_from_file();
 	void v_print_pd_problem();
+	double* dGetPdProblem();
+	int iGetPdDoubleSize();
 };
 

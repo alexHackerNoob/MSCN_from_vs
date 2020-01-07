@@ -113,3 +113,13 @@ void ReadPdSolution::vPrintPdSolution()
 {
 	this->vPrintPdTable(this->pd_solution, this->i_pd_double_size);
 }
+
+double * ReadPdSolution::dGetPdSolution()
+{
+	return this->pd_solution;
+}
+
+int ReadPdSolution::iGetPdDoubleSize()
+{
+	return this->i_pd_double_size;
+}
