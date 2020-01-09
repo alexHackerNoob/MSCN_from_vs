@@ -1,11 +1,53 @@
 #pragma once
 using namespace std;
+#include "CRandom.h"
 #include <iostream> 
 #define D_NO_NISTAKE 0;
 #define D_MISTAKE_TABLE_PD_SOLUTION_NOT_EXIST 1; 
 #define D_MISTAKE_TABLE_VALUES 2;
 #define D_MISTAKE_ALREADY_EXIST_PD_PROBLEM 3; 
 #define D_ANOTHER_PROBLEM 4;
+
+#define I_ERROR_SIZE 10;
+#define I_ERROR_NULL_POINTER 11;
+#define I_ERROR_VALUE_INTERVAL 12;
+#define I_ERROR_XD_SD_INTREVAL 13;
+#define I_ERROR_XF_SF_INTREVAL 14;
+#define I_ERROR_XM_SM_INTREVAL 15;
+#define I_ERROR_XM_SS_INTREVAL 16;
+#define I_ERROR_XD_XF_INTREVAL 17;
+#define I_ERROR_XF_XM_INTREVAL 18;
+#define I_NOT_SET_PD_PROBLEM 19;
+#define I_NO_ERROR 20;
+
+//const INTERVALS TO RANDOM
+namespace min_max {
+#define D_MAX_CD 10.0;
+#define D_MAX_CF 10.0;
+#define D_MAX_CM 10.0;
+
+#define D_MAX_UD 10.0;
+#define D_MAX_UF 10.0;
+#define D_MAX_UM 10.0;
+
+#define D_MAX_SD 50.0;
+#define D_MAX_SF 50.0;
+#define D_MAX_SM 50.0;
+#define D_MAX_SS 50.0;
+
+#define D_MIN_CD 1.0;
+#define D_MIN_CF 1.0;
+#define D_MIN_CM 1.0;
+
+#define D_MIN_UD 1.0;
+#define D_MIN_UF 1.0;
+#define D_MIN_UM 1.0;
+
+#define D_MIN_SD 1.0;
+#define D_MIN_SF 1.0;
+#define D_MIN_SM 1.0;
+#define D_MIN_SS 1.0;
+}
 #pragma warning(disable:4996)
 class CMscnProblem
 {
@@ -14,6 +56,8 @@ private:
 	bool *b_if_good_pd_solution;
 	bool *b_if_was_set_value;
 	bool *b_if_set_pd_problem;
+	bool *b_if_set_pd_solution;
+	bool *b_if_set_sizes;
 	//cena dostawki + przerabienia
 	double **cd_table = NULL;
 	double **cf_table = NULL;
@@ -56,6 +100,10 @@ private:
 	void vPrintOneDemensionalArray(double* pd_table, int i_size);
 	void vPrintTwoDementionalArray(double** pd_table, int i_line_size, int i_column_size);
 	void vPrintTwoDementionalArray(std::pair<double, double>** pp_pointer, int i_line_size, int i_column_size);
+
+	//helpful methods
+	int iGetSizeMustHave(int i_d_read_length, int i_f_read_length, int i_m_read_length, int i_s_read_length);
+
 public:
 	CMscnProblem();
 	~CMscnProblem();
@@ -81,5 +129,22 @@ public:
 	double dGetQuality(double *pd_solution, int i_size, double *pd_mistake);
 	bool writeProblem(string s_file_name);
 	bool writeSolution(string s_file_name);
+	//
+	bool bConstrainsSatisfied(double* pd_solution, int i_size, int *pi_error_num);
+	bool bIfIntervalCorrect();
+	//random_method
+	void vGenerateInstance(int iInstanceSeed);
+
+	void generateForTwoDimentional(CRandom *cR, double** pd_table, int i_line_size, int i_column_size, double i_min, double i_max);
+	void generateForOneDimentional(CRandom *cR, double* pd_table, int i_size, double i_min, double i_max);
+
+	//methods for CRandomSearch
+	bool * pb_get_b_if_set_pd_problem();
+	int iGetDSize();
+	int iGetFSize();
+	int iGetMSize();
+	int iGetSSize();
+	bool bIfIntervalCorrect(double* pd_solution, int i_size);
+	double getDatasFromSolutionTables(double ** xd_help, double ** xf_help, double ** xm_table);
 };
 

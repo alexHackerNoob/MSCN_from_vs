@@ -2,14 +2,301 @@
 
 #include <string> 
 
+int CMscnProblem::iGetSizeMustHave(int i_d_read_length, int i_f_read_length, int i_m_read_length, int i_s_read_length)
+{
+	int i_size_must_have = 0;
+	i_size_must_have += 4;
+	i_size_must_have += i_d_read_length * i_f_read_length;
+	i_size_must_have += i_f_read_length * i_m_read_length;
+	i_size_must_have += i_m_read_length * i_s_read_length;
+	return i_size_must_have;
+}
+
+void CMscnProblem::generateForTwoDimentional(CRandom *cR, double** pd_table, int i_line_size, int i_column_size, double i_min, double i_max)
+{
+	 
+	if (pd_table != NULL)
+	{
+		for (int i = 0; i < i_line_size; i++)
+		{
+			if (pd_table[i] == NULL)
+			{
+				pd_table[i] = new double[i_column_size];
+			}
+		}
+	}
+	else 
+	{
+		pd_table = new double*[i_line_size];
+		for (int i = 0; i < i_column_size; i++)
+		{
+			pd_table[i] = new double[i_column_size];
+		}
+	}
+	for (int i = 0; i < i_line_size; i++)
+	{
+		for (int j = 0; j < i_column_size; j++)
+		{
+			pd_table[i][j] = (*cR).iGetRandomDouble(i_min, i_max);
+		}
+	}
+}
+
+void CMscnProblem::generateForOneDimentional(CRandom * cR, double * pd_table, int i_size, double i_min, double i_max)
+{
+	if (pd_table == NULL)
+	{
+		pd_table = new double[i_size];
+	}
+	for (int i = 0; i < i_size; i++)
+	{
+		pd_table[i] = (*cR).iGetRandomDouble(i_min, i_max);
+	}
+	cout << endl << "w tablice" << endl;
+	for (int i = 0; i < i_size; i++)
+	{
+		cout << pd_table[i] << endl;
+	}
+}
+
+bool * CMscnProblem::pb_get_b_if_set_pd_problem()
+{
+	return this->b_if_set_pd_problem;
+}
+
+int CMscnProblem::iGetDSize()
+{
+	return this->i_d_size;
+}
+
+int CMscnProblem::iGetFSize()
+{
+	return this->i_f_size;
+}
+
+int CMscnProblem::iGetMSize()
+{
+	return this->i_m_size;
+}
+
+int CMscnProblem::iGetSSize()
+{
+	return this->i_s_size;
+}
+
+bool CMscnProblem::bIfIntervalCorrect(double * pd_solution, int i_size)
+{
+
+	if (*this->b_if_set_pd_problem)
+	{
+		double **xd_help = new double*[this->i_d_size];
+		double **xf_help = new double*[this->i_f_size];
+		double **xm_help = new double*[this->i_m_size];
+
+		for (int i = 0; i < this->i_d_size; i++)
+		{
+			xd_help[i] = new double[this->i_f_size];
+		}
+		for (int i = 0; i < this->i_f_size; i++)
+		{
+			xf_help[i] = new double[this->i_m_size];
+		}
+		for (int i = 0; i < this->i_m_size; i++)
+		{
+			xm_help[i] = new double[this->i_s_size];
+		}
+
+		int i_current_index = 4;
+		int i_line_index = 0;
+		int i_column_index = 0;
+		for (int i = i_current_index; i < i_current_index + this->i_d_size; i++)
+		{
+			if (i_column_index == this->i_f_size)
+			{
+				i_column_index = 0;
+				i_line_index++;
+			}
+			xd_help[i_line_index][i_column_index] = pd_solution[i_current_index];
+			i_column_index++;
+		}
+
+	    i_current_index += i_d_size;
+		i_line_index = 0;
+		i_column_index = 0;
+		for (int i = i_current_index; i < i_current_index + this->i_f_size; i++)
+		{
+			if (i_column_index == this->i_m_size)
+			{
+				i_column_index = 0;
+				i_line_index++;
+			}
+			xf_help[i_line_index][i_column_index] = pd_solution[i_current_index];
+			i_column_index++;
+		}
+
+		i_current_index += i_f_size;
+		i_line_index = 0;
+		i_column_index = 0;
+		for (int i = i_current_index; i < i_current_index + this->i_m_size; i++)
+		{
+			if (i_column_index == this->i_s_size)
+			{
+				i_column_index = 0;
+				i_line_index++;
+			}
+			xm_help[i_line_index][i_column_index] = pd_solution[i_current_index];
+			i_column_index++;
+		}
+
+		for (int i = 0; i < this->i_d_size; i++)
+		{
+			for (int j = 0; j < this->i_f_size; j++)
+			{
+				if (this->xd_min_max[i][j].first > xd_help[i][j] && this->xd_min_max[i][j].second < xd_help[i][j])
+				{
+					this->vDeleteTwoDementionalArray(xd_help, i_d_size);
+					this->vDeleteTwoDementionalArray(xf_help, i_f_size);
+					this->vDeleteTwoDementionalArray(xm_help, i_m_size);
+					return false;
+				}
+
+			}
+		}
+
+		for (int i = 0; i < this->i_f_size; i++)
+		{
+			for (int j = 0; j < this->i_m_size; j++)
+			{
+				if (this->xf_min_max[i][j].first > xf_help[i][j] && this->xf_min_max[i][j].second < xf_help[i][j])
+				{
+					this->vDeleteTwoDementionalArray(xd_help, i_d_size);
+					this->vDeleteTwoDementionalArray(xf_help, i_f_size);
+					this->vDeleteTwoDementionalArray(xm_help, i_m_size);
+					return false;
+				}
+
+			}
+		}
+
+		for (int i = 0; i < this->i_m_size; i++)
+		{
+			for (int j = 0; j < this->i_s_size; j++)
+			{
+				if (this->xm_min_max[i][j].first > xm_help[i][j] && this->xm_min_max[i][j].second < xm_help[i][j])
+				{
+					this->vDeleteTwoDementionalArray(xd_help, i_d_size);
+					this->vDeleteTwoDementionalArray(xf_help, i_f_size);
+					this->vDeleteTwoDementionalArray(xm_help, i_m_size);
+					return false;
+				}
+
+			}
+		}
+		this->vDeleteTwoDementionalArray(xd_help, i_d_size);
+		this->vDeleteTwoDementionalArray(xf_help, i_f_size);
+		this->vDeleteTwoDementionalArray(xm_help, i_m_size);
+		return true;
+	}
+	else 
+	{
+		return false;
+	}
+}
+
+double CMscnProblem::getDatasFromSolutionTables(double ** xd_help, double ** xf_help, double ** xm_help)
+{
+	double d_finish_profit = 0;
+	double d_k_t = 0;
+	double d_k_u = 0;
+	double d_p = 0;
+	//sum cd xd
+	for (int i = 0; i < this->i_d_size; i++)
+	{
+		for (int j = 0; j < this->i_f_size; j++)
+		{
+			d_k_t += this->cd_table[i][j] * xd_help[i][j];
+		}
+	}
+
+	//sum cf xf
+	for (int i = 0; i < this->i_f_size; i++)
+	{
+		for (int j = 0; j < this->i_m_size; j++)
+		{
+			d_k_t += this->cf_table[i][j] * xf_help[i][j];
+		}
+	}
+
+	//sum cm cm
+
+	for (int i = 0; i < this->i_m_size; i++)
+	{
+		for (int j = 0; j < this->i_s_size; j++)
+		{
+			d_k_t += this->cm_table[i][j] * xm_help[i][j];
+		}
+	}
+
+	//d_k_u
+
+	for (int i = 0; i < this->i_d_size; i++)
+	{
+		double d_sum_xd_f = 0;
+		double d_pseudo_b_helper = 0;
+		for (int j = 0; j < this->i_f_size; j++)
+		{
+			d_sum_xd_f += xd_help[i][j];
+		}
+		if (d_sum_xd_f > 0) d_pseudo_b_helper = 1;
+		d_k_u += d_pseudo_b_helper * this->ud_table[i];
+	}
+
+	for (int i = 0; i < this->i_f_size; i++)
+	{
+		double d_sum_xf_m = 0;
+		double d_pseudo_b_helper = 0;
+		for (int j = 0; j < this->i_m_size; j++)
+		{
+			d_sum_xf_m += xf_help[i][j];
+		}
+		if (d_sum_xf_m > 0) d_pseudo_b_helper = 1;
+		d_k_u += d_pseudo_b_helper * this->uf_table[i];
+	}
+
+	for (int i = 0; i < this->i_m_size; i++)
+	{
+		double d_sum_xm_s = 0;
+		double d_pseudo_b_helper = 0;
+		for (int j = 0; j < this->i_s_size; j++)
+		{
+			d_sum_xm_s += xm_help[i][j];
+		}
+		if (d_sum_xm_s > 0) d_pseudo_b_helper = 1;
+		d_k_u += d_pseudo_b_helper * this->um_table[i];
+	}
+	//d_p
+	for (int i = 0; i < this->i_m_size; i++)
+	{
+		for (int j = 0; j < this->i_s_size; j++)
+		{
+			d_p += this->p_table[j] * xm_help[i][j];
+		}
+	}
+	d_finish_profit = d_p - d_k_t - d_k_u;
+	return d_finish_profit;
+}
+
 CMscnProblem::CMscnProblem()
 {
 	this->b_if_good_init = new bool;
 	this->b_if_set_pd_problem = new bool;
 	this->b_if_good_pd_solution = new bool;
 	this->b_if_was_set_value = new bool;
+	this->b_if_set_pd_solution = new bool;
+	this->b_if_set_sizes = new bool;
+	*(this->b_if_set_sizes) = false;
+	*(this->b_if_set_pd_solution) = false;
 	*(this->b_if_good_init) = true;
-
 	*(this->b_if_good_pd_solution) = true;
 	*(this->b_if_was_set_value) = false;
 	*(this->b_if_set_pd_problem) = false;
@@ -36,6 +323,8 @@ CMscnProblem::~CMscnProblem()
 	delete this->b_if_good_init;
 	delete this->b_if_good_pd_solution;
 	delete this->b_if_set_pd_problem;
+	delete this->b_if_set_pd_solution;
+	delete this->b_if_set_sizes;
 	//delete another parametrs
 	this->vDeleteOneDimensionalArray(this->ud_table);
 	this->vDeleteOneDimensionalArray(this->uf_table);
@@ -207,10 +496,16 @@ void CMscnProblem::vSetSizes(int i_d_length, int i_f_length, int i_m_length, int
 			this->vDeleteOneDimensionalArray(this->sf_table);
 			this->vDeleteOneDimensionalArray(this->sm_table);
 			this->vDeleteOneDimensionalArray(this->ss_table);
+			//add new lines 
+			this->vDeleteOneDimensionalArray(this->ud_table);
+			this->vDeleteOneDimensionalArray(this->uf_table);
+			this->vDeleteOneDimensionalArray(this->um_table);
 			//delete two-dimensional double arrays
 			this->vDeleteTwoDementionalArray(this->cd_table, this->i_d_size);
 			this->vDeleteTwoDementionalArray(this->cf_table, this->i_f_size);
 			this->vDeleteTwoDementionalArray(this->cm_table, this->i_m_size);
+			//add new lines 
+
 			//delete bool pointers
 			delete this->b_if_was_set_value;
 			delete this->b_if_good_init;
@@ -252,6 +547,12 @@ void CMscnProblem::vSetSizes(int i_d_length, int i_f_length, int i_m_length, int
 		this->i_m_size = i_m_length;
 		this->i_s_size = i_s_length;
 		*(this->b_if_was_set_value) = true;
+		*this->b_if_set_sizes = true;
+
+		//add new lines
+		this->ud_table = new double[i_d_length];
+		this->uf_table = new double[i_f_length];
+		this->um_table = new double[i_m_length];
 	}
 }
 
@@ -632,6 +933,7 @@ bool CMscnProblem::bGetDatasFromSolution(double * pd_solution, int i_size)
 		this->xm_table[i_line_index][i_column_index] = pd_solution[i];
 	}
 	i_current_index_pd_solution += i_tab_length_help;
+	*this->b_if_set_pd_solution = true;
 	return true;
 }
 
@@ -1139,6 +1441,366 @@ bool CMscnProblem::writeSolution(string s_file_name)
 	fclose(file);
 
 	return b_to_return;
+}
+
+bool CMscnProblem::bConstrainsSatisfied(double *pd_solution, int i_size, int *pi_error_num)
+{
+	if (i_size < 4)
+	{
+		*pi_error_num = I_ERROR_SIZE;
+		return false;
+	}
+	if (pd_solution == NULL)
+	{
+		*pi_error_num = I_ERROR_NULL_POINTER;
+		return false;
+	}
+	int i_d_read_length = pd_solution[0];
+	int i_f_read_length = pd_solution[1];
+	int i_m_read_length = pd_solution[2];
+	int i_s_read_length = pd_solution[3];
+	int i_size_must_have = iGetSizeMustHave(i_d_read_length, i_f_read_length, i_m_read_length, i_s_read_length);
+	if (i_size != i_size_must_have)
+	{
+		*pi_error_num = I_ERROR_SIZE;
+		return false;
+	}
+	for (int i = 0; i < i_size_must_have; i++)
+	{
+		if (pd_solution[i] <= 0)
+		{
+			*pi_error_num = I_ERROR_VALUE_INTERVAL;
+			return false;
+		}
+	}
+
+	if (!*this->b_if_set_pd_problem)
+	{
+		*pi_error_num = I_NOT_SET_PD_PROBLEM;
+		return false;
+	}
+	//create help fake solution
+
+	double **xd_help = new double* [pd_solution[0]];
+	double **xf_help = new double* [pd_solution[1]];
+	double **xm_help = new double* [pd_solution[2]];
+
+	for (int i = 0; i < this->i_d_size; i++)
+	{
+	     xd_help[i] = new double[this->i_f_size];
+	}
+
+	for (int i = 0; i < this->i_f_size; i++)
+	{
+		xf_help[i] = new double[this->i_m_size];
+	}
+
+	for (int i = 0; i < this->i_m_size; i++)
+	{
+		xm_help[i] = new double[this->i_s_size];
+	}
+
+	int i_current_index = 4;
+	int i_line_index = 0;
+	int i_column_index = 0;
+	int i_indexes_to_go = this->i_d_size * this->i_f_size;
+	for (int i = i_current_index; i < i_current_index + i_indexes_to_go; i++)
+	{
+		if (i_column_index == this->i_f_size)
+		{
+			i_column_index = 0;
+			i_line_index++;
+		}
+		xd_help[i_line_index][i_column_index] = pd_solution[i];
+		i_column_index++;
+	}
+	i_current_index += i_indexes_to_go;
+
+	i_line_index = 0;
+	i_column_index = 0;
+	i_indexes_to_go = this->i_f_size * this->i_m_size;
+	for (int i = i_current_index; i < i_current_index + i_indexes_to_go; i++)
+	{
+		if (i_column_index == this->i_m_size)
+		{
+			i_column_index = 0;
+			i_line_index++;
+		}
+		xd_help[i_line_index][i_column_index] = pd_solution[i];
+		i_column_index++;
+	}
+	i_current_index += i_indexes_to_go;
+
+
+	i_line_index = 0;
+	i_column_index = 0;
+	i_indexes_to_go = this->i_m_size * this->i_s_size;
+	for (int i = i_current_index; i < i_current_index + i_indexes_to_go; i++)
+	{
+		if (i_column_index == this->i_s_size)
+		{
+			i_column_index = 0;
+			i_line_index++;
+		}
+		xd_help[i_line_index][i_column_index] = pd_solution[i];
+		i_column_index++;
+	}
+	i_current_index += i_indexes_to_go;
+
+
+
+
+	for (int i = 0; i < this->i_d_size; i++)
+	{
+		double xd_sum = 0;
+		for (int j = 0; j < this->i_d_size; j++)
+		{
+			for (int k = 0; k < this->i_f_size; k++)
+			{
+				xd_sum += xd_help[j][k];
+			}
+		}
+		if (xd_sum > this->sd_table[i])
+		{
+			this->vDeleteTwoDementionalArray(xd_help, this->i_d_size);
+			this->vDeleteTwoDementionalArray(xf_help, this->i_f_size);
+			this->vDeleteTwoDementionalArray(xm_help, this->i_m_size);
+			*pi_error_num = I_ERROR_XD_SD_INTREVAL;
+			return false;
+		}
+	}
+
+	for (int i = 0; i < this->i_f_size; i++)
+	{
+		double xf_sum = 0;
+		for (int j = 0; j < this->i_f_size; j++)
+		{
+			for (int k = 0; k < this->i_m_size; k++)
+			{
+				xf_sum += xf_help[j][k];
+			}
+		}
+		if (xf_sum > this->sf_table[i])
+		{
+			this->vDeleteTwoDementionalArray(xd_help, this->i_d_size);
+			this->vDeleteTwoDementionalArray(xf_help, this->i_f_size);
+			this->vDeleteTwoDementionalArray(xm_help, this->i_m_size);
+			*pi_error_num = I_ERROR_XF_SF_INTREVAL;
+			return false;
+		}
+	}
+
+	for (int i = 0; i < this->i_m_size; i++)
+	{
+		double xm_sum = 0;
+		for (int j = 0; j < this->i_m_size; j++)
+		{
+			for (int k = 0; k < this->i_s_size; k++)
+			{
+				xm_sum += xm_help[j][k];
+			}
+		}
+		if (xm_sum > this->sm_table[i])
+		{
+			this->vDeleteTwoDementionalArray(xd_help, this->i_d_size);
+			this->vDeleteTwoDementionalArray(xf_help, this->i_f_size);
+			this->vDeleteTwoDementionalArray(xm_help, this->i_m_size);
+			*pi_error_num = I_ERROR_XM_SM_INTREVAL;
+			return false;
+		}
+	}
+
+	for (int i = 0; i < this->i_s_size; i++)
+	{
+		double xm_sum = 0;
+		for (int j = 0; j < this->i_s_size; j++)
+		{
+			for (int k = 0; k < this->i_m_size; k++)
+			{
+				xm_sum += xm_help[j][k];
+			}
+		}
+		if (xm_sum > this->ss_table[i])
+		{
+			this->vDeleteTwoDementionalArray(xd_help, this->i_d_size);
+			this->vDeleteTwoDementionalArray(xf_help, this->i_f_size);
+			this->vDeleteTwoDementionalArray(xm_help, this->i_m_size);
+			*pi_error_num = I_ERROR_XM_SS_INTREVAL;
+			return false;
+		}
+	}
+
+	for (int i = 0; i < this->i_f_size; i++)
+	{
+		double xd_sum = 0;
+		double xf_sum = 0;
+		for (int j = 0; j < this->i_d_size; j++)
+		{
+			xd_sum += xd_help[j][i];
+		}
+		for (int k = 0; k < this->i_m_size; k++)
+		{
+			xf_sum += xf_help[i][k];
+		}
+		if (xd_sum < xf_sum)
+		{
+			this->vDeleteTwoDementionalArray(xd_help, this->i_d_size);
+			this->vDeleteTwoDementionalArray(xf_help, this->i_f_size);
+			this->vDeleteTwoDementionalArray(xm_help, this->i_m_size);
+			*pi_error_num = I_ERROR_XD_XF_INTREVAL;
+			return false;
+		}
+	}
+
+	for (int i = 0; i < this->i_m_size; i++)
+	{
+		double xf_sum = 0;
+		double xm_sum = 0;
+		for (int j = 0; j < this->i_f_size; j++)
+		{
+			xf_sum += xf_help[j][i];
+		}
+		for (int k = 0; k < this->i_s_size; k++)
+		{
+			xm_sum += xm_help[i][k];
+		}
+		if (xf_sum < xm_sum)
+		{
+			this->vDeleteTwoDementionalArray(xd_help, this->i_d_size);
+			this->vDeleteTwoDementionalArray(xf_help, this->i_f_size);
+			this->vDeleteTwoDementionalArray(xm_help, this->i_m_size);
+			*pi_error_num = I_ERROR_XF_XM_INTREVAL;
+			return false;
+		}
+	}
+	this->vDeleteTwoDementionalArray(xd_help, this->i_d_size);
+	this->vDeleteTwoDementionalArray(xf_help, this->i_f_size);
+	this->vDeleteTwoDementionalArray(xm_help, this->i_m_size);
+	*pi_error_num = I_NO_ERROR;
+	return true;
+	
+}
+
+bool CMscnProblem::bIfIntervalCorrect()
+{
+	if (!(*this->b_if_set_pd_problem && *this->b_if_set_pd_solution))
+	{
+		return false;
+	}
+	else 
+	{
+		for (int i = 0; i < this->i_d_size; i++)
+		{
+			for (int j = 0; j < this->i_f_size; j++)
+			{
+				if (this->xd_min_max[i][j].first > this->xd_table[i][j] && this->xd_min_max[i][j].second < this->xd_table[i][j])
+				{
+					return false;
+				}
+
+			}
+		}
+
+		for (int i = 0; i < this->i_f_size; i++)
+		{
+			for (int j = 0; j < this->i_m_size; j++)
+			{
+				if (this->xf_min_max[i][j].first > this->xf_table[i][j] && this->xf_min_max[i][j].second < this->xf_table[i][j])
+				{
+					return false;
+				}
+
+			}
+		}
+
+		for (int i = 0; i < this->i_m_size; i++)
+		{
+			for (int j = 0; j < this->i_s_size; j++)
+			{
+				if (this->xm_min_max[i][j].first > this->xm_table[i][j] && this->xm_min_max[i][j].second < this->xm_table[i][j])
+				{
+					return false;
+				}
+
+			}
+		}
+		return true;
+	}
+}
+
+void CMscnProblem::vGenerateInstance(int iInstanceSeed)
+{
+	/*
+
+
+
+
+
+
+#define D_MAX_SD 50.0;
+#define D_MAX_SF 50.0;
+#define D_MAX_SM 50.0;
+#define D_MAX_SS 50.0;
+
+
+
+
+
+
+
+
+#define D_MIN_SD 1.0;
+#define D_MIN_SF 1.0;
+#define D_MIN_SM 1.0;
+#define D_MIN_SS 1.0;
+	*/
+	if (*this->b_if_set_sizes)
+	{
+		CRandom* cR = new CRandom(iInstanceSeed);
+		//cd double **
+		double d_min = D_MIN_CD;
+		double d_max = D_MAX_CD;
+		this->generateForTwoDimentional(cR, this->cd_table, this->i_d_size, this->i_f_size, d_min, d_max);
+		//cf double **
+		d_min = D_MIN_CF; 
+		d_max = D_MAX_CF;
+		this->generateForTwoDimentional(cR, this->cf_table, this->i_f_size, this->i_m_size, d_min, d_max);
+		//cm double **
+		d_min = D_MIN_CM;
+		d_max = D_MAX_CM;
+		this->generateForTwoDimentional(cR, this->cm_table, this->i_m_size, this->i_s_size, d_min, d_max);
+        //ud uf um double *
+		d_min = D_MIN_UD;
+		d_max = D_MAX_UD;
+		this->generateForOneDimentional(cR, this->ud_table, this->i_d_size, d_min, d_max);
+
+		d_min = D_MIN_UF;
+		d_max = D_MAX_UF;
+		this->generateForOneDimentional(cR, this->uf_table, this->i_f_size, d_min, d_max);
+
+		d_min = D_MIN_UM;
+		d_max = D_MAX_UM;
+		this->generateForOneDimentional(cR, this->um_table, this->i_m_size, d_min, d_max);
+
+        //sd sf sm ss double *
+		d_min = D_MIN_SD;
+		d_max = D_MAX_SD;
+		this->generateForOneDimentional(cR, this->sd_table, this->i_d_size, d_min, d_max);
+
+		d_min = D_MIN_SF;
+		d_max = D_MAX_SF;
+		this->generateForOneDimentional(cR, this->sf_table, this->i_f_size, d_min, d_max);
+
+		d_min = D_MIN_SM;
+		d_max = D_MAX_SM;
+		this->generateForOneDimentional(cR, this->sm_table, this->i_m_size, d_min, d_max);
+
+		d_min = D_MIN_SS;
+		d_max = D_MAX_SS;
+		this->generateForOneDimentional(cR, this->ss_table, this->i_s_size, d_min, d_max);
+    
+
+	}
 }
 
 

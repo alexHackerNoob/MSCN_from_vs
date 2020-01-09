@@ -1,6 +1,8 @@
 #include "CMscnProblem.h"
 #include "ReadPdProblem.h"
 #include "ReadPdSolution.h"
+#include "CRandom.h"
+#include "CRandomSearch.h"
 #pragma warning(disable:4996)
 #include <iostream>
 #include <vector>
@@ -39,12 +41,20 @@ void testMethod()
 	pd_solution[4] = 30;
 	pd_solution[5] = 30;
 	pd_solution[6] = 30;
-	
+
 	CMscnProblem cm = CMscnProblem();
+	int* i_mistake_num = new int;
+	bool b_if_constrains = cm.bConstrainsSatisfied(pd_solution, 7, i_mistake_num);
+	delete i_mistake_num;
 	ReadPdProblem r_pd_prob("f_write_problem.txt");
 	r_pd_prob.v_read_from_file();
 	r_pd_prob.v_print_pd_problem();
+	int * ERROR_MISTAKE_NUM = new int;
+	bool b = cm.bConstrainsSatisfied(pd_solution, 7, ERROR_MISTAKE_NUM);
+	bool v_if_b_interval_correct1 = cm.bIfIntervalCorrect();
+	delete ERROR_MISTAKE_NUM;
 	cm.bGetDatasFromProblem(r_pd_prob.dGetPdProblem(), r_pd_prob.iGetPdDoubleSize());
+	bool bInter = cm.bIfIntervalCorrect();
 	//cm.bGetDatasFromSolution(pd_solution, 7);
 	//cout << endl << "----------------------------" << endl << "print datas" << endl;
 	//cm.vPrintAllDatas();
@@ -57,6 +67,7 @@ void testMethod()
 	r_pd_solution.vPrintPdSolution();
 	cout << "---------------------------------";
 	cout <<"profit of this solution: "<< cm.dGetQuality(r_pd_solution.dGetPdSolution(), r_pd_solution.iGetPdDoubleSize(), d_mistake_num) <<endl;
+	bool b1Inter = cm.bIfIntervalCorrect();
 	cm.vPrintAllDatas();
 	cout << endl << "mistake num: " << *d_mistake_num << endl;
 
@@ -120,7 +131,7 @@ int main()
 		}
 		delete xd_min_max;
 		*/
-		testMethod();
+		//testMethod();
 
 			/*
 		ReadPdProblem r_pd_pr("f_read_problem.txt");
@@ -132,6 +143,32 @@ int main()
 		r_pd_sol.vPrintPdSolution();
 		*/
 
+		/*CRandom cr = CRandom(time(NULL));
+		cout << cr.iGetRandomInt(75,75)<<endl;
+		cout << cr.iGetRandomDouble(3.4, 6.8) << endl;
+		cout << time(NULL)<<endl;
+
+		CMscnProblem cMS = CMscnProblem();
+		cMS.vSetSizes(1, 2, 1, 3);
+		cMS.vGenerateInstance(time(NULL));
+		cout << endl << "-----------------------------------" << endl;
+		cMS.vPrintAllDatas();
+		/*
+		double *pd_table = new double[2];
+		cMS.generateForOneDimentional(new CRandom(time(NULL)), pd_table, 2, 7.9, 78.6);
+		*/
+
+		//not delete
+		CMscnProblem* cM = new CMscnProblem();
+		ReadPdProblem r_pd_prob("f_read_problem.txt");
+		r_pd_prob.v_read_from_file();
+		cM->bGetDatasFromProblem(r_pd_prob.dGetPdProblem(), r_pd_prob.iGetPdDoubleSize());
+		r_pd_prob.v_read_from_file();
+		CRandomSearch cRS(cM);
+		cout << cRS.ifGetPdSolution();
+		cout <<endl<< "-----------------------" << endl;
+		cRS.vGenerateRandomSolution(15, time(NULL));
+		cRS.printBestSolutionWithProfit();
 	}
 	system("pause");
 	return 0;
